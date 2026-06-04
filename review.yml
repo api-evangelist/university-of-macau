@@ -1,0 +1,49 @@
+---
+name: University of Macau
+description: University of Macau public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/university-of-macau/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 3
+    summary: >-
+      University of Macau operates a genuine, documented Data and Open Data API
+      Platform at data.um.edu.mo (managed by ICTO) with JSON APIs across About
+      UM, Academic, Facilities, Media, and Student categories, plus documented
+      pagination, filtering, sorting, and response-code conventions. The home
+      page, API operations docs, call examples, dataset listing, quickstart,
+      and terms pages all return HTTP 200 and were verified live. Access is
+      gated behind UMPASS registration and an API key, and no anonymous public
+      base URL (api.data.um.edu.mo returns 404) is documented, so no baseURL was
+      asserted. No official University of Macau GitHub organization was found;
+      github.com/UM belongs to University of Malaya, not Macau. No fabricated
+      endpoints, keys, or base URLs were added.
+    endpoints:
+      - url: https://data.um.edu.mo/
+        status: 200
+        note: Data and Open Data API Platform home / developer portal.
+      - url: https://data.um.edu.mo/api-documents/api-operations
+        status: 200
+        note: API operations docs (pagination, filtering, sorting, response codes).
+      - url: https://data.um.edu.mo/documentation/api-call-examples
+        status: 200
+        note: Code samples in Node.js, Python, Java, C#; references YOUR_API_KEY_HERE.
+      - url: https://data.um.edu.mo/dataset
+        status: 200
+        note: Dataset listing.
+      - url: https://data.um.edu.mo/quickstart
+        status: 200
+        note: Quick start; register with UMPASS to obtain an API key.
+      - url: https://data.um.edu.mo/terms-and-conditions-of-use
+        status: 200
+        note: Terms and conditions; data is free to use.
+      - url: https://www.um.edu.mo/
+        status: 200
+        note: Official university website.
+      - url: https://api.data.um.edu.mo/
+        status: 404
+        note: No anonymous public API base URL resolves.
+      - url: https://www.linkedin.com/school/universityofmacau/
+        status: 200
+        note: Official LinkedIn school page.

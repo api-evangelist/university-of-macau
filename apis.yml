@@ -1,0 +1,73 @@
+---
+aid: university-of-macau
+name: University of Macau
+description: >-
+  The University of Macau (UM), founded in 1981, is the leading public
+  comprehensive research university of the Macao Special Administrative Region
+  and is ranked #245 in the QS World University Rankings 2025. English is its
+  main medium of instruction and around 80 percent of its faculty are recruited
+  internationally. UM operates a public-facing Data and Open Data API Platform
+  at data.um.edu.mo, managed by its Information and Communication Technology
+  Office (ICTO), exposing JSON APIs across categories such as About UM,
+  Academic, Facilities, Media, and Student data. Access requires registration
+  and an API key via UMPASS, and the platform is primarily oriented toward UM
+  staff and students.
+type: Index
+position: Consumer
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/university-of-macau/refs/heads/main/apis.yml
+tags:
+  - Education
+  - Higher Education
+  - University
+  - Open Data
+  - Macau
+  - China
+created: '2026-06-03'
+modified: '2026-06-03'
+specificationVersion: '0.19'
+apis:
+  - aid: university-of-macau:data-platform
+    name: UM Data and Open Data API Platform
+    description: >-
+      The University of Macau Data and Open Data API Platform provides JSON
+      APIs to data published by UM, organized into categories including About
+      UM (organizational units and public holidays), Academic (course catalog
+      and courses offered), Facilities (facilities information), Media (news and
+      events) and Student (student services information). The platform supports
+      pagination, filtering, sorting, and standard HTTP response codes. Access
+      requires registration and an API key obtained through UMPASS; data is
+      free to use subject to the terms and conditions. No anonymous public base
+      URL is documented, so baseURL is omitted.
+    humanURL: https://data.um.edu.mo/api-documents/api-operations
+    tags: [ Open Data, Academic, Education, Macau ]
+    properties:
+      - type: Documentation
+        url: https://data.um.edu.mo/api-documents/api-operations
+      - type: Documentation
+        url: https://data.um.edu.mo/documentation/api-call-examples
+      - type: SignUp
+        url: https://data.um.edu.mo/quickstart
+common:
+  - type: Website
+    url: https://www.um.edu.mo/
+  - type: DeveloperPortal
+    url: https://data.um.edu.mo/
+  - type: Authentication
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: LinkedIn
+    url: https://www.linkedin.com/school/universityofmacau/
+  - type: Plans
+    url: plans/university-of-macau-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/university-of-macau-rate-limits.yml
+  - type: FinOps
+    url: finops/university-of-macau-finops.yml
+  - type: Review
+    url: review.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
