@@ -1,0 +1,65 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "um": "https://data.um.edu.mo/vocab#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "name": "schema:name",
+    "url": "schema:url",
+    "description": "schema:description",
+    "identifier": "schema:identifier",
+    "foundingDate": {
+      "@id": "schema:foundingDate",
+      "@type": "xsd:date"
+    },
+    "address": "schema:address",
+    "department": "schema:department",
+    "logo": {
+      "@id": "schema:logo",
+      "@type": "@id"
+    },
+    "sameAs": {
+      "@id": "schema:sameAs",
+      "@type": "@id"
+    },
+    "Organization": "schema:CollegeOrUniversity",
+    "DeveloperPortal": "um:DeveloperPortal",
+    "Dataset": "schema:Dataset",
+    "DataCatalog": "schema:DataCatalog",
+    "dataset": "schema:dataset",
+    "distribution": "schema:distribution",
+    "contentUrl": {
+      "@id": "schema:contentUrl",
+      "@type": "@id"
+    },
+    "encodingFormat": "schema:encodingFormat",
+    "license": {
+      "@id": "schema:license",
+      "@type": "@id"
+    },
+    "category": "schema:category",
+    "apiPlatform": "um:apiPlatform"
+  },
+  "@type": "Organization",
+  "@id": "https://www.um.edu.mo/",
+  "name": "University of Macau",
+  "url": "https://www.um.edu.mo/",
+  "foundingDate": "1981-01-01",
+  "description": "The University of Macau (UM) is the leading public comprehensive research university of the Macao Special Administrative Region, operating a Data and Open Data API Platform via its Information and Communication Technology Office (ICTO).",
+  "sameAs": "https://www.linkedin.com/school/universityofmacau/",
+  "apiPlatform": {
+    "@type": "DataCatalog",
+    "@id": "https://data.um.edu.mo/",
+    "name": "UM Data and Open Data API Platform",
+    "url": "https://data.um.edu.mo/",
+    "description": "JSON APIs to data published by UM, organized into categories including About UM, Academic, Facilities, Media, and Student. Access requires registration and an API key obtained through UMPASS.",
+    "dataset": [
+      { "@type": "Dataset", "name": "About UM", "category": "Organizational Units and Public Holidays" },
+      { "@type": "Dataset", "name": "Academic", "category": "Course Catalog and Courses Offered" },
+      { "@type": "Dataset", "name": "Facilities", "category": "Facilities Information" },
+      { "@type": "Dataset", "name": "Media", "category": "News and Events" },
+      { "@type": "Dataset", "name": "Student", "category": "Student Services Information" }
+    ],
+    "license": "https://data.um.edu.mo/terms-and-conditions-of-use"
+  }
+}
