@@ -47,7 +47,7 @@ apis:
         url: https://data.um.edu.mo/api-documents/api-operations
       - type: Documentation
         url: https://data.um.edu.mo/documentation/api-call-examples
-      - type: SignUp
+      - type: Signup
         url: https://data.um.edu.mo/quickstart
 common:
   - type: Website
