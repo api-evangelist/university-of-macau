@@ -50,6 +50,8 @@ apis:
       - type: Signup
         url: https://data.um.edu.mo/quickstart
 common:
+  - type: DomainSecurity
+    url: security/university-of-macau-domain-security.yml
   - type: Website
     url: https://www.um.edu.mo/
   - type: DeveloperPortal
