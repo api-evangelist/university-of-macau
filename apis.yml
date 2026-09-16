@@ -71,227 +71,875 @@ created: '2026-06-03'
 modified: '2026-09-01'
 specificationVersion: '0.23'
 apis:
-  - aid: university-of-macau:open-data-api
-    name: UM Data and Open Data API Platform
-    x-operator: institution
-    x-operator-evidence: >-
-      All sixteen APIs are served from api.data.um.edu.mo, a host under the University of Macau's
-      own registrable domain, and every data set is UM's own campus data. The delivery platform is
-      Azure API Management (the 401 challenge is
-      WWW-Authenticate: AzureApiManagementKey), but Microsoft operates no part of the data or the
-      API design; the copyright line on every page of the portal is "Information and Communication
-      Technology Office (ICTO), University of Macau".
-    description: >-
-      Sixteen JSON APIs, nineteen operations, all GET, covering About UM (organizational units in
-      Chinese, English and Portuguese; public holidays), Academic (course catalog and per-semester
-      course offerings addressable as {course}-{year}-{sem} and down to a section code), Facilities
-      (car park availability, computer room PC status and reservations, shuttle bus arrival times,
-      sports facilities and bookings, door access control records with hashed cardholder ids,
-      outdoor WiFi access logs), Media (news and events) and Student (residential college hostel
-      bed spaces, student job vacancies). Collection operations share one documented convention:
-      page, pagesize (max 100), count and sort_by, with records wrapped in _embedded alongside
-      _returned, _size and _total_pages. Authentication is an Azure API Management subscription key
-      in the Authorization header, obtained by subscribing to the single published product, "UM
-      Members", after registering the service through UMPASS. There is no OAuth flow and no scope
-      model. The API is documented publicly and callable only by the university's own members.
-    humanURL: https://data.um.edu.mo/
-    baseURL: https://api.data.um.edu.mo
-    tags: [ Open Data, Course Catalog, Campus Life, Education, Macau ]
-    properties:
-      - type: OpenAPI
-        url: openapi/university-of-macau-open-data-api-openapi.yml
-      - type: JSONSchema
-        url: json-schema/university-of-macau-open-data-schemas.json
-      - type: Examples
-        url: examples/university-of-macau-open-data-examples.yml
-      - type: Authentication
-        url: authentication/university-of-macau-authentication.yml
-      - type: ErrorCatalog
-        url: errors/university-of-macau-problem-types.yml
-      - type: Lifecycle
-        url: lifecycle/university-of-macau-lifecycle.yml
-      - type: Conformance
-        url: conformance/university-of-macau-conformance.yml
-      - type: Vocabulary
-        url: vocabulary/university-of-macau-vocabulary.yml
-      - type: Rules
-        url: rules/university-of-macau-openapi-spectral-rules.yml
-      - type: Documentation
-        url: https://data.um.edu.mo/api-documents/api-operations
-      - type: Documentation
-        url: https://data.um.edu.mo/documentation/api-call-examples
-      - type: DataModel
-        url: https://data.um.edu.mo/data-dictionary
-      - type: APIReference
-        url: https://data.um.edu.mo/dataset
-      - type: GettingStarted
-        url: https://data.um.edu.mo/quickstart
-      - type: SignUp
-        url: https://data.um.edu.mo/quickstart
-      - type: TermsOfService
-        url: https://data.um.edu.mo/terms-and-conditions-of-use
-      - type: Support
-        url: https://data.um.edu.mo/contact-us
-  - aid: university-of-macau:websso-idp
-    name: UM Web SSO — institutional SAML 2.0 / OpenID Connect identity provider
-    x-operator: institution
-    x-operator-evidence: >-
-      websso.um.edu.mo is under the university's own registrable domain and publishes a signed
-      EntityDescriptor with entityID http://websso.um.edu.mo/adfs/services/trust. The realm lookup
-      for um.edu.mo returns NameSpaceType "Federated", AuthURL https://websso.um.edu.mo/adfs/ls/
-      and FederationBrandName "University of Macau".
-    description: >-
-      UMPASS, the university's single sign-on, is served by UM's own AD FS farm. It publishes
-      federation metadata as application/samlmetadata+xml — 71 KB, signed, carrying both an
-      IDPSSODescriptor and an SPSSODescriptor, SAML 2.0 protocol support, SingleSignOnService over
-      HTTP-POST and HTTP-Redirect, four SingleLogoutService endpoints and 128 declared claim types
-      — and an OpenID Connect discovery document at /adfs/.well-known/openid-configuration. This is
-      the university's strongest institution-operated machine-readable surface and the one class
-      the June 2026 cohort profiling missed entirely. Macao has no national research-and-education
-      identity federation, so there is no eduGAIN or InCommon aggregate entry to point at; the
-      metadata is published directly by the institution.
-    humanURL: https://websso.um.edu.mo/adfs/ls/IdpInitiatedSignon.aspx
-    tags: [ Identity Federation, SAML, OpenID Connect, Education ]
-    properties:
-      - type: IdentityFederation
-        url: https://websso.um.edu.mo/FederationMetadata/2007-06/FederationMetadata.xml
-      - type: OpenIDConfiguration
-        url: https://websso.um.edu.mo/adfs/.well-known/openid-configuration
-      - type: Authentication
-        url: authentication/university-of-macau-authentication.yml
-  - aid: university-of-macau:entra-federation
-    name: Microsoft Entra ID tenant federation for um.edu.mo
-    x-operator: federation
-    x-operator-evidence: >-
-      https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration returns 200
-      with issuer https://login.microsoftonline.com/76eeec46-fe40-4e1b-ab42-1d6d9f91b8a9/v2.0 —
-      UM's own tenant on a broker every Microsoft customer shares.
-    description: >-
-      The identity broker in front of UM's own IdP. Sign-in to data.um.edu.mo, UMMoodle and the
-      GenAI chat starts at a Microsoft sign-in page and is redirected to websso.um.edu.mo, so the
-      Entra tenant is a genuine institutional fact — the tenant is UM's — while the discovery
-      documents and the federation metadata endpoint belong to Microsoft and are shared by every
-      tenant. Recorded as a relationship, not as a contract.
-    humanURL: https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration
-    tags: [ Identity Federation, OpenID Connect, Education ]
-    properties:
-      - type: OpenIDConfiguration
-        url: https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration
-  - aid: university-of-macau:ummoodle-lti
-    name: UMMoodle — LTI 1.3 Advantage platform
-    x-operator: tenant
-    x-operator-evidence: >-
-      ummoodle.um.edu.mo is UM's host and UM's deployment, but the LTI implementation, the token
-      endpoint and the web-services API are Moodle's product surface, not the university's
-      engineering. Recorded as a tenant relationship rather than credited to UM as a contract.
-    description: >-
-      The University of Macau's Moodle learning management system publishes a live LTI 1.3
-      Advantage platform key set at /mod/lti/certs.php (200, application/json, RSA RS256 signing
-      key), an OAuth 2.0 client-credentials token endpoint at /mod/lti/token.php and the OIDC
-      initiation endpoint at /mod/lti/auth.php. A Moodle Web Services REST endpoint is live at
-      /webservice/rest/server.php and answers an unauthenticated call with the Moodle
-      invalidtoken exception, so it is deployed but token-gated. This is UM's only conformance with
-      a named education-sector interoperability standard, and it arrives through the LMS.
-    humanURL: https://ummoodle.um.edu.mo/
-    tags: [ Learning Management, LTI, Education ]
-    properties:
-      - type: JWKS
-        url: https://ummoodle.um.edu.mo/mod/lti/certs.php
-      - type: Conformance
-        url: conformance/university-of-macau-conformance.yml
-      - type: Documentation
-        url: https://elearning.um.edu.mo/
-  - aid: university-of-macau:primo-discovery
-    name: UM Library discovery — Ex Libris Primo VE tenancy
-    x-operator: tenant
-    x-operator-evidence: >-
-      Discovery runs on umlibrary.primo.exlibrisgroup.com — Ex Libris's host, not UM's — under the
-      institution-specific view identifier vid=853UOM_INST:umlibrary. The tenancy is UM's; the
-      platform and any API contract are Ex Libris's.
-    description: >-
-      The University of Macau Library's catalog and discovery layer is an Ex Libris Primo VE
-      tenancy. UM's institution code is 853UOM_INST and its view is umlibrary. No UM-operated
-      library API exists; any Primo or Alma API belongs in Ex Libris's own profile and is
-      deliberately not saved here. Recorded so the relationship survives without crediting the
-      university for a vendor's contract.
-    humanURL: https://umlibrary.primo.exlibrisgroup.com/discovery/search?vid=853UOM_INST:umlibrary
-    tags: [ Library, Discovery, Education ]
-    properties:
-      - type: LibraryCatalog
-        url: https://umlibrary.primo.exlibrisgroup.com/discovery/search?vid=853UOM_INST:umlibrary
-      - type: Documentation
-        url: https://library.um.edu.mo/lib_homepage_en
-  - aid: university-of-macau:scholars-hub
-    name: UM Scholars Hub — institutional repository
-    x-operator: tenant
-    x-operator-evidence: >-
-      repository.um.edu.mo is UM's host, but the software is a third-party institutional-repository
-      product: its robots.txt still carries the vendor's untranslated Chinese template comment
-      referencing ir.las.ac.cn. The deployment and the content are UM's; the contract is not.
-    description: >-
-      澳門大學學者庫, the University of Macau's institutional repository and scholar profile system,
-      indexing faculties and institutes, scholars, publications and subjects. It is not harvestable:
-      /oai and /oai/request both return 404, /api/core/sites answers "Your IP is not allowed to
-      access or harvest this resources!", and sign-in is via UMPASS. For a research university this
-      is the notable absence — no OAI-PMH provider exists on any um.edu.mo host, so UM's research
-      output is not machine-readable from the institution's own infrastructure.
-    humanURL: https://repository.um.edu.mo/
-    tags: [ Research Repository, Research Data, Education ]
-    properties:
-      - type: ResearchRepository
-        url: https://repository.um.edu.mo/
-  - aid: university-of-macau:genai-chat
-    name: UM GENAI Chat — Open WebUI deployment
-    x-operator: tenant
-    x-operator-evidence: >-
-      chat.genai.um.edu.mo is UM's host and UM's deployment, and /api/config identifies the software
-      as "GENAI Chat (Open WebUI)" version 0.9.2. The contract is Open WebUI's; the deployment,
-      the model access and the policy around it are UM's.
-    description: >-
-      The university's own generative-AI chat service for staff and students, an Open WebUI
-      deployment authenticated by OIDC against UMPASS, with self-signup and the local login form
-      disabled. Its unauthenticated /api/config and /health endpoints are readable; everything else
-      returns "Not authenticated". Notably, enable_api_keys is false — there is no programmatic
-      access to this surface at all, by deliberate configuration. UM publishes accompanying
-      Guidelines on the Use of Generative Artificial Intelligence Tools at genai.um.edu.mo, which
-      name Azure OpenAI as the backing service.
-    humanURL: https://chat.genai.um.edu.mo/
-    tags: [ AI, Generative AI, Education ]
-    properties:
-      - type: AITooling
-        url: https://chat.genai.um.edu.mo/
-      - type: AIPolicy
-        url: https://genai.um.edu.mo/
-  - aid: university-of-macau:crossref-member
-    name: Crossref membership — University of Macau
-    x-operator: registry
-    x-operator-evidence: >-
-      https://api.crossref.org/members/53643 returns primary-name "University of Macau", location
-      "Taipa, Macau, China". Crossref's API is shared by every member; the membership is UM's.
-    description: >-
-      The University of Macau is Crossref member 53643, with DOI prefix 10.64219 and 21 DOIs
-      registered as of 2026-09-01. This is a fact about the institution and one of the education
-      regime's named standards; Crossref's own contract belongs in Crossref's profile, never here.
-    humanURL: https://api.crossref.org/members/53643
-    tags: [ Identifiers, DOI, Research Data, Education ]
-    properties:
-      - type: RegistryMembership
-        url: https://api.crossref.org/members/53643
-  - aid: university-of-macau:ror
-    name: ROR identifier — University of Macau
-    x-operator: registry
-    x-operator-evidence: >-
-      https://ror.org/01r4q9n85 resolves to the University of Macau, with GRID grid.437123.0 and
-      website https://www.um.edu.mo. ROR is a shared registry; the record is UM's.
-    description: >-
-      Research Organization Registry identifier for the University of Macau, carrying its
-      English, Portuguese and historical names (Universidade de Macau, University of East Asia)
-      and its cross-references to GRID, ISNI, Wikidata and Crossref Funder Registry.
-    humanURL: https://ror.org/01r4q9n85
-    tags: [ Identifiers, Research Data, Education ]
-    properties:
-      - type: RegistryMembership
-        url: https://ror.org/01r4q9n85
+- aid: university-of-macau:websso-idp
+  name: UM Web SSO — institutional SAML 2.0 / OpenID Connect identity provider
+  x-operator: institution
+  x-operator-evidence: >-
+    websso.um.edu.mo is under the university's own registrable domain and publishes a signed EntityDescriptor
+    with entityID http://websso.um.edu.mo/adfs/services/trust. The realm lookup for um.edu.mo returns
+    NameSpaceType "Federated", AuthURL https://websso.um.edu.mo/adfs/ls/ and FederationBrandName "University
+    of Macau".
+  description: >-
+    UMPASS, the university's single sign-on, is served by UM's own AD FS farm. It publishes federation
+    metadata as application/samlmetadata+xml — 71 KB, signed, carrying both an IDPSSODescriptor and an
+    SPSSODescriptor, SAML 2.0 protocol support, SingleSignOnService over HTTP-POST and HTTP-Redirect,
+    four SingleLogoutService endpoints and 128 declared claim types — and an OpenID Connect discovery
+    document at /adfs/.well-known/openid-configuration. This is the university's strongest institution-operated
+    machine-readable surface and the one class the June 2026 cohort profiling missed entirely. Macao has
+    no national research-and-education identity federation, so there is no eduGAIN or InCommon aggregate
+    entry to point at; the metadata is published directly by the institution.
+  humanURL: https://websso.um.edu.mo/adfs/ls/IdpInitiatedSignon.aspx
+  tags:
+  - Identity Federation
+  - SAML
+  - OpenID Connect
+  - Education
+  properties:
+  - type: IdentityFederation
+    url: https://websso.um.edu.mo/FederationMetadata/2007-06/FederationMetadata.xml
+  - type: OpenIDConfiguration
+    url: https://websso.um.edu.mo/adfs/.well-known/openid-configuration
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+- aid: university-of-macau:entra-federation
+  name: Microsoft Entra ID tenant federation for um.edu.mo
+  x-operator: federation
+  x-operator-evidence: >-
+    https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration returns 200 with
+    issuer https://login.microsoftonline.com/76eeec46-fe40-4e1b-ab42-1d6d9f91b8a9/v2.0 — UM's own tenant
+    on a broker every Microsoft customer shares.
+  description: >-
+    The identity broker in front of UM's own IdP. Sign-in to data.um.edu.mo, UMMoodle and the GenAI chat
+    starts at a Microsoft sign-in page and is redirected to websso.um.edu.mo, so the Entra tenant is a
+    genuine institutional fact — the tenant is UM's — while the discovery documents and the federation
+    metadata endpoint belong to Microsoft and are shared by every tenant. Recorded as a relationship,
+    not as a contract.
+  humanURL: https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration
+  tags:
+  - Identity Federation
+  - OpenID Connect
+  - Education
+  properties:
+  - type: OpenIDConfiguration
+    url: https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration
+- aid: university-of-macau:ummoodle-lti
+  name: UMMoodle — LTI 1.3 Advantage platform
+  x-operator: tenant
+  x-operator-evidence: >-
+    ummoodle.um.edu.mo is UM's host and UM's deployment, but the LTI implementation, the token endpoint
+    and the web-services API are Moodle's product surface, not the university's engineering. Recorded
+    as a tenant relationship rather than credited to UM as a contract.
+  description: >-
+    The University of Macau's Moodle learning management system publishes a live LTI 1.3 Advantage platform
+    key set at /mod/lti/certs.php (200, application/json, RSA RS256 signing key), an OAuth 2.0 client-credentials
+    token endpoint at /mod/lti/token.php and the OIDC initiation endpoint at /mod/lti/auth.php. A Moodle
+    Web Services REST endpoint is live at /webservice/rest/server.php and answers an unauthenticated call
+    with the Moodle invalidtoken exception, so it is deployed but token-gated. This is UM's only conformance
+    with a named education-sector interoperability standard, and it arrives through the LMS.
+  humanURL: https://ummoodle.um.edu.mo/
+  tags:
+  - Learning Management
+  - LTI
+  - Education
+  properties:
+  - type: JWKS
+    url: https://ummoodle.um.edu.mo/mod/lti/certs.php
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Documentation
+    url: https://elearning.um.edu.mo/
+- aid: university-of-macau:primo-discovery
+  name: UM Library discovery — Ex Libris Primo VE tenancy
+  x-operator: tenant
+  x-operator-evidence: >-
+    Discovery runs on umlibrary.primo.exlibrisgroup.com — Ex Libris's host, not UM's — under the institution-specific
+    view identifier vid=853UOM_INST:umlibrary. The tenancy is UM's; the platform and any API contract
+    are Ex Libris's.
+  description: >-
+    The University of Macau Library's catalog and discovery layer is an Ex Libris Primo VE tenancy. UM's
+    institution code is 853UOM_INST and its view is umlibrary. No UM-operated library API exists; any
+    Primo or Alma API belongs in Ex Libris's own profile and is deliberately not saved here. Recorded
+    so the relationship survives without crediting the university for a vendor's contract.
+  humanURL: https://umlibrary.primo.exlibrisgroup.com/discovery/search?vid=853UOM_INST:umlibrary
+  tags:
+  - Library
+  - Discovery
+  - Education
+  properties:
+  - type: LibraryCatalog
+    url: https://umlibrary.primo.exlibrisgroup.com/discovery/search?vid=853UOM_INST:umlibrary
+  - type: Documentation
+    url: https://library.um.edu.mo/lib_homepage_en
+- aid: university-of-macau:scholars-hub
+  name: UM Scholars Hub — institutional repository
+  x-operator: tenant
+  x-operator-evidence: >-
+    repository.um.edu.mo is UM's host, but the software is a third-party institutional-repository product:
+    its robots.txt still carries the vendor's untranslated Chinese template comment referencing ir.las.ac.cn.
+    The deployment and the content are UM's; the contract is not.
+  description: >-
+    澳門大學學者庫, the University of Macau's institutional repository and scholar profile system, indexing faculties
+    and institutes, scholars, publications and subjects. It is not harvestable: /oai and /oai/request
+    both return 404, /api/core/sites answers "Your IP is not allowed to access or harvest this resources!",
+    and sign-in is via UMPASS. For a research university this is the notable absence — no OAI-PMH provider
+    exists on any um.edu.mo host, so UM's research output is not machine-readable from the institution's
+    own infrastructure.
+  humanURL: https://repository.um.edu.mo/
+  tags:
+  - Research Repository
+  - Research Data
+  - Education
+  properties:
+  - type: ResearchRepository
+    url: https://repository.um.edu.mo/
+- aid: university-of-macau:genai-chat
+  name: UM GENAI Chat — Open WebUI deployment
+  x-operator: tenant
+  x-operator-evidence: >-
+    chat.genai.um.edu.mo is UM's host and UM's deployment, and /api/config identifies the software as
+    "GENAI Chat (Open WebUI)" version 0.9.2. The contract is Open WebUI's; the deployment, the model access
+    and the policy around it are UM's.
+  description: >-
+    The university's own generative-AI chat service for staff and students, an Open WebUI deployment authenticated
+    by OIDC against UMPASS, with self-signup and the local login form disabled. Its unauthenticated /api/config
+    and /health endpoints are readable; everything else returns "Not authenticated". Notably, enable_api_keys
+    is false — there is no programmatic access to this surface at all, by deliberate configuration. UM
+    publishes accompanying Guidelines on the Use of Generative Artificial Intelligence Tools at genai.um.edu.mo,
+    which name Azure OpenAI as the backing service.
+  humanURL: https://chat.genai.um.edu.mo/
+  tags:
+  - AI
+  - Generative AI
+  - Education
+  properties:
+  - type: AITooling
+    url: https://chat.genai.um.edu.mo/
+  - type: AIPolicy
+    url: https://genai.um.edu.mo/
+- aid: university-of-macau:crossref-member
+  name: Crossref membership — University of Macau
+  x-operator: registry
+  x-operator-evidence: >-
+    https://api.crossref.org/members/53643 returns primary-name "University of Macau", location "Taipa,
+    Macau, China". Crossref's API is shared by every member; the membership is UM's.
+  description: >-
+    The University of Macau is Crossref member 53643, with DOI prefix 10.64219 and 21 DOIs registered
+    as of 2026-09-01. This is a fact about the institution and one of the education regime's named standards;
+    Crossref's own contract belongs in Crossref's profile, never here.
+  humanURL: https://api.crossref.org/members/53643
+  tags:
+  - Identifiers
+  - DOI
+  - Research Data
+  - Education
+  properties:
+  - type: RegistryMembership
+    url: https://api.crossref.org/members/53643
+- aid: university-of-macau:ror
+  name: ROR identifier — University of Macau
+  x-operator: registry
+  x-operator-evidence: >-
+    https://ror.org/01r4q9n85 resolves to the University of Macau, with GRID grid.437123.0 and website
+    https://www.um.edu.mo. ROR is a shared registry; the record is UM's.
+  description: >-
+    Research Organization Registry identifier for the University of Macau, carrying its English, Portuguese
+    and historical names (Universidade de Macau, University of East Asia) and its cross-references to
+    GRID, ISNI, Wikidata and Crossref Funder Registry.
+  humanURL: https://ror.org/01r4q9n85
+  tags:
+  - Identifiers
+  - Research Data
+  - Education
+  properties:
+  - type: RegistryMembership
+    url: https://ror.org/01r4q9n85
+- aid: university-of-macau:university-of-macau-access-control-records-api
+  name: University of Macau Access Control Records API
+  description: This data set includes online door access records.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Access Control Records
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-access-control-records-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-car-park-availability-api
+  name: University of Macau Car Park Availability API
+  description: >-
+    This data set includes the total number of available parking spaces for the car park according to
+    the vehicle type or parking type.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Car Park Availability
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-car-park-availability-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-computer-room-pc-status-api
+  name: University of Macau Computer Room PC Status API
+  description: >-
+    This data set includes the locations and availability status of computer room PCs at the University
+    of Macau. It details the PC name, locations and availability.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Computer Room PC Status
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-computer-room-pc-status-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-computer-room-reservations-api
+  name: University of Macau Computer Room Reservations API
+  description: >-
+    This data set includes latest information of computer room locations and reservations records.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Computer Room Reservations
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-computer-room-reservations-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-course-catalog-api
+  name: University of Macau Course Catalog API
+  description: This data set includes all course information of current academic year.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Course Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-course-catalog-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-courses-api
+  name: University of Macau Courses API
+  description: >-
+    This data set includes courses and their corresponding sections. For each section, two JSON Array
+    of objects detail the schedule and instructor arrangements.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Courses
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-courses-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-events-api
+  name: University of Macau Events API
+  description: This data set includes events data of the University of Macau.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-events-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-news-api
+  name: University of Macau News API
+  description: This data set includes news data published by the University of Macau.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - News
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-news-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-organizational-units-api
+  name: University of Macau Organizational Units API
+  description: >-
+    This data set includes current units and sub-units information of the University of Macau in three
+    languages: Chinese, English and Portuguese.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Organizational Units
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-organizational-units-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-public-holidays-api
+  name: University of Macau Public Holidays API
+  description: This data set includes the date of the public holidays of the University of Macau.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Public Holidays
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-public-holidays-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-rc-hostel-bed-spaces-api
+  name: University of Macau RC Hostel Bed Spaces API
+  description: >-
+    This data set includes current information of bed spaces in residential college excluded PGH. No historical
+    records, and bed name is pre-generated for the whole year ahead.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - RC Hostel Bed Spaces
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-rc-hostel-bed-spaces-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-shuttle-bus-arrival-time-api
+  name: University of Macau Shuttle Bus Arrival Time API
+  description: This data set includes the bus arrival time records and station information.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Shuttle Bus Arrival Time
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-shuttle-bus-arrival-time-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-sports-facilities-api
+  name: University of Macau Sports Facilities API
+  description: This data set includes current sports facilities on the University of Macau campus.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Sports Facilities
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-sports-facilities-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-sports-facilities-booking-api
+  name: University of Macau Sports Facilities Booking API
+  description: >-
+    This data set includes booking information about current sports facilities on the University of Macau
+    campus.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Sports Facilities Booking
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-sports-facilities-booking-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-student-job-vacancies-api
+  name: University of Macau Student Job Vacancies API
+  description: >-
+    This data set includes information of job vacancy advertisement posted in Job Vacancy E-system for
+    student.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Student Job Vacancies
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-student-job-vacancies-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
+- aid: university-of-macau:university-of-macau-wifi-access-log-api
+  name: University of Macau Wifi Access Log API
+  description: This data set includes WiFi access logs from outdoor wireless access points.
+  humanURL: https://data.um.edu.mo/
+  baseURL: https://api.data.um.edu.mo
+  tags:
+  - Wifi Access Log
+  properties:
+  - type: OpenAPI
+    url: openapi/university-of-macau-wifi-access-log-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/university-of-macau-open-data-schemas.json
+  - type: Examples
+    url: examples/university-of-macau-open-data-examples.yml
+  - type: Authentication
+    url: authentication/university-of-macau-authentication.yml
+  - type: ErrorCatalog
+    url: errors/university-of-macau-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/university-of-macau-lifecycle.yml
+  - type: Conformance
+    url: conformance/university-of-macau-conformance.yml
+  - type: Vocabulary
+    url: vocabulary/university-of-macau-vocabulary.yml
+  - type: Rules
+    url: rules/university-of-macau-openapi-spectral-rules.yml
+  - type: Documentation
+    url: https://data.um.edu.mo/api-documents/api-operations
+  - type: Documentation
+    url: https://data.um.edu.mo/documentation/api-call-examples
+  - type: DataModel
+    url: https://data.um.edu.mo/data-dictionary
+  - type: APIReference
+    url: https://data.um.edu.mo/dataset
+  - type: GettingStarted
+    url: https://data.um.edu.mo/quickstart
+  - type: SignUp
+    url: https://data.um.edu.mo/quickstart
+  - type: TermsOfService
+    url: https://data.um.edu.mo/terms-and-conditions-of-use
+  - type: Support
+    url: https://data.um.edu.mo/contact-us
 common:
   - type: Website
     url: https://www.um.edu.mo/
