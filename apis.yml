@@ -208,6 +208,10 @@ apis:
     which name Azure OpenAI as the backing service.
   humanURL: https://chat.genai.um.edu.mo/
   tags:
+  - Artificial Intelligence
+  - Generative AI
+  - Education
+  tags_raw:
   - AI
   - Generative AI
   - Education
@@ -518,6 +522,8 @@ apis:
   humanURL: https://data.um.edu.mo/
   baseURL: https://api.data.um.edu.mo
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
