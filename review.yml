@@ -3,47 +3,100 @@ name: University of Macau
 description: University of Macau public developer/API footprint review for APIs.json cataloging.
 url: https://raw.githubusercontent.com/api-evangelist/university-of-macau/refs/heads/main/review.yml
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-09-01'
 reviews:
-  - date: '2026-06-03'
-    rating: 3
-    summary: >-
-      University of Macau operates a genuine, documented Data and Open Data API
-      Platform at data.um.edu.mo (managed by ICTO) with JSON APIs across About
-      UM, Academic, Facilities, Media, and Student categories, plus documented
-      pagination, filtering, sorting, and response-code conventions. The home
-      page, API operations docs, call examples, dataset listing, quickstart,
-      and terms pages all return HTTP 200 and were verified live. Access is
-      gated behind UMPASS registration and an API key, and no anonymous public
-      base URL (api.data.um.edu.mo returns 404) is documented, so no baseURL was
-      asserted. No official University of Macau GitHub organization was found;
-      github.com/UM belongs to University of Malaya, not Macau. No fabricated
-      endpoints, keys, or base URLs were added.
-    endpoints:
-      - url: https://data.um.edu.mo/
-        status: 200
-        note: Data and Open Data API Platform home / developer portal.
-      - url: https://data.um.edu.mo/api-documents/api-operations
-        status: 200
-        note: API operations docs (pagination, filtering, sorting, response codes).
-      - url: https://data.um.edu.mo/documentation/api-call-examples
-        status: 200
-        note: Code samples in Node.js, Python, Java, C#; references YOUR_API_KEY_HERE.
-      - url: https://data.um.edu.mo/dataset
-        status: 200
-        note: Dataset listing.
-      - url: https://data.um.edu.mo/quickstart
-        status: 200
-        note: Quick start; register with UMPASS to obtain an API key.
-      - url: https://data.um.edu.mo/terms-and-conditions-of-use
-        status: 200
-        note: Terms and conditions; data is free to use.
-      - url: https://www.um.edu.mo/
-        status: 200
-        note: Official university website.
-      - url: https://api.data.um.edu.mo/
-        status: 404
-        note: No anonymous public API base URL resolves.
-      - url: https://www.linkedin.com/school/universityofmacau/
-        status: 200
-        note: Official LinkedIn school page.
+- date: '2026-09-01'
+  rating: 4
+  summary: 'Re-profiled under the API Evangelist university pipeline, which settles WHO OPERATES each
+    surface before saving anything. The June 2026 review was right that UM runs a genuine ICTO open-data
+    platform and right to refuse a fabricated baseURL, but it was wrong on two counts and both are now
+    corrected. First, api.data.um.edu.mo is live: a bare GET on the host returns 404 because nothing
+    is mounted at the root, but /service/media/events/all returns 401 with WWW-Authenticate: AzureApiManagementKey,
+    which is what a registered, key-protected Azure API Management route looks like. That 404-versus-401
+    split, plus the platform''s own anonymously readable developer-portal backend at /developer/apis?api-version=2022-04-01-preview,
+    exposed the complete surface: 16 APIs, 19 operations, every path, every documented query parameter.
+    An OpenAPI was reconstructed from that metadata and marked method: probed, because UM publishes
+    none of its own — the portal''s export returns paths: {}. Second, the review missed the university''s
+    strongest machine-readable surfaces entirely: UM''s own AD FS identity provider at websso.um.edu.mo
+    publishes signed SAML 2.0 federation metadata and an OIDC discovery document, and UMMoodle publishes
+    a live LTI 1.3 Advantage key set. Three surfaces that look like UM''s are not: library discovery
+    is an Ex Libris Primo VE tenancy (853UOM_INST), the Scholars Hub repository runs third-party IR
+    software behind an IP allowlist, and the GenAI chat is an Open WebUI deployment with API keys disabled.
+    All three are recorded as tenant relationships rather than deleted or credited. Crossref member
+    53643 and ROR 01r4q9n85 are recorded as registry memberships. No DataCite account and no OAI-PMH
+    provider exists on any um.edu.mo host. No official GitHub organization exists — the earlier note
+    about github.com/UM belonging to University of Malaya still holds, and github.com/university-of-macau
+    and github.com/umacau are empty registrations with zero public repositories.'
+  endpoints:
+  - url: https://api.data.um.edu.mo/service/media/events/all
+    status: 401
+    note: Live gateway route; Azure API Management subscription-key challenge. Confirms the platform
+      is callable, not absent.
+  - url: https://data.um.edu.mo/developer/apis?api-version=2022-04-01-preview
+    status: 200
+    note: Anonymously readable developer-portal backend; source of the reconstructed OpenAPI.
+  - url: https://websso.um.edu.mo/FederationMetadata/2007-06/FederationMetadata.xml
+    status: 200
+    note: Signed SAML 2.0 metadata, application/samlmetadata+xml, UM-operated AD FS IdP.
+  - url: https://websso.um.edu.mo/adfs/.well-known/openid-configuration
+    status: 200
+    note: OIDC discovery for the same IdP.
+  - url: https://ummoodle.um.edu.mo/mod/lti/certs.php
+    status: 200
+    note: LTI 1.3 Advantage platform JWKS on UM Moodle.
+  - url: https://umlibrary.primo.exlibrisgroup.com/discovery/search?vid=853UOM_INST:umlibrary
+    status: 200
+    note: Ex Libris Primo VE tenancy — vendor host, UM view id. Recorded as tenant.
+  - url: https://repository.um.edu.mo/oai?verb=Identify
+    status: 404
+    note: No OAI-PMH provider; institutional repository is not harvestable.
+  - url: https://chat.genai.um.edu.mo/api/config
+    status: 200
+    note: Open WebUI 0.9.2, OIDC via UMPASS, enable_api_keys false.
+  - url: https://api.crossref.org/members/53643
+    status: 200
+    note: Crossref membership, DOI prefix 10.64219.
+  - url: https://ror.org/01r4q9n85
+    status: 200
+    note: ROR identifier for the University of Macau.
+  - url: https://api.datacite.org/clients?query=Macau
+    status: 200
+    note: Empty result — no DataCite account.
+- date: '2026-06-03'
+  rating: 3
+  summary: University of Macau operates a genuine, documented Data and Open Data API Platform at data.um.edu.mo
+    (managed by ICTO) with JSON APIs across About UM, Academic, Facilities, Media, and Student categories,
+    plus documented pagination, filtering, sorting, and response-code conventions. The home page, API
+    operations docs, call examples, dataset listing, quickstart, and terms pages all return HTTP 200
+    and were verified live. Access is gated behind UMPASS registration and an API key, and no anonymous
+    public base URL (api.data.um.edu.mo returns 404) is documented, so no baseURL was asserted. No official
+    University of Macau GitHub organization was found; github.com/UM belongs to University of Malaya,
+    not Macau. No fabricated endpoints, keys, or base URLs were added.
+  endpoints:
+  - url: https://data.um.edu.mo/
+    status: 200
+    note: Data and Open Data API Platform home / developer portal.
+  - url: https://data.um.edu.mo/api-documents/api-operations
+    status: 200
+    note: API operations docs (pagination, filtering, sorting, response codes).
+  - url: https://data.um.edu.mo/documentation/api-call-examples
+    status: 200
+    note: Code samples in Node.js, Python, Java, C#; references YOUR_API_KEY_HERE.
+  - url: https://data.um.edu.mo/dataset
+    status: 200
+    note: Dataset listing.
+  - url: https://data.um.edu.mo/quickstart
+    status: 200
+    note: Quick start; register with UMPASS to obtain an API key.
+  - url: https://data.um.edu.mo/terms-and-conditions-of-use
+    status: 200
+    note: Terms and conditions; data is free to use.
+  - url: https://www.um.edu.mo/
+    status: 200
+    note: Official university website.
+  - url: https://api.data.um.edu.mo/
+    status: 404
+    note: No anonymous public API base URL resolves.
+  - url: https://www.linkedin.com/school/universityofmacau/
+    status: 200
+    note: Official LinkedIn school page.

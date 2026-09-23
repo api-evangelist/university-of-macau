@@ -1,0 +1,79 @@
+generated: '2026-09-01'
+method: probed
+source: https://api.data.um.edu.mo/service/media/events/all
+docs: https://data.um.edu.mo/quickstart
+sources:
+- https://data.um.edu.mo/quickstart
+- https://data.um.edu.mo/developer/apis?api-version=2022-04-01-preview
+- https://api.data.um.edu.mo/service/media/events/all
+- https://login.microsoftonline.com/getuserrealm.srf?login=user@um.edu.mo&json=1
+x-operator: institution
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  - query
+  oauth2_flows: []
+  note: >-
+    Two credentials, two different populations. The Data and Open Data API itself is protected by
+    an Azure API Management subscription key with no OAuth flow and no scope model at all: the
+    gateway answers an unauthenticated call with 401 and
+    `WWW-Authenticate: AzureApiManagementKey realm="https://api.data.um.edu.mo/service/media/events",
+    name="Authorization", type="header"`. Obtaining that key is what is actually gated — it requires
+    a UMPASS account, which requires University of Macau affiliation. So the API is not public in
+    the sense a developer means it: anyone can read the surface, nobody outside UM can call it.
+schemes:
+- name: apiKeyHeader
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: raw subscription key (no "Bearer " prefix)
+  purpose: Call any of the 16 data-set APIs on https://api.data.um.edu.mo.
+  issuance: >-
+    Register the "OPEN DATA API PLATFORM" service on the ICTO Account Information page, sign in to
+    data.um.edu.mo with UMPASS, subscribe to the "UM Members" product, then reveal the Primary or
+    Secondary key on the Subscriptions page. Two keys are issued per subscription, which is the
+    Azure API Management rotation model (rotate one while the other stays live).
+  evidence: >-
+    subscriptionKeyParameterNames.header = "Authorization" on all 16 APIs in the developer-portal
+    metadata; live 401 challenge names the same header.
+- name: apiKeyQuery
+  type: apiKey
+  in: query
+  parameter: subscription-key
+  purpose: Same key, supplied on the query string instead of the header.
+  evidence: subscriptionKeyParameterNames.query = "subscription-key" on all 16 APIs.
+identity:
+  gate: UMPASS
+  gate_operator: institution
+  note: >-
+    UMPASS is the University of Macau's own single sign-on. The realm lookup for um.edu.mo returns
+    NameSpaceType "Federated" with AuthURL https://websso.um.edu.mo/adfs/ls/ and FederationBrandName
+    "University of Macau" — that is UM's own AD FS identity provider, federated into a Microsoft
+    Entra ID tenant (76eeec46-fe40-4e1b-ab42-1d6d9f91b8a9). The IdP is institution-operated; only
+    the federation broker is Microsoft's.
+  metadata:
+  - kind: saml2-metadata
+    url: https://websso.um.edu.mo/FederationMetadata/2007-06/FederationMetadata.xml
+    status: 200
+    content_type: application/samlmetadata+xml
+    entity_id: http://websso.um.edu.mo/adfs/services/trust
+  - kind: openid-configuration
+    url: https://websso.um.edu.mo/adfs/.well-known/openid-configuration
+    status: 200
+    issuer: https://websso.umac.mo/adfs
+  - kind: entra-openid-configuration
+    url: https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration
+    status: 200
+    issuer: https://login.microsoftonline.com/76eeec46-fe40-4e1b-ab42-1d6d9f91b8a9/v2.0
+scopes:
+  model: none
+  detail: >-
+    No OAuth2 or OpenID Connect authentication settings are configured on any of the 16 APIs
+    (authenticationSettings.oAuth2AuthenticationSettings and .openidAuthenticationSettings are both
+    empty arrays on every one). Authorization is coarse: a subscription to a product grants all
+    APIs in that product. There are no per-dataset or per-operation scopes to record.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

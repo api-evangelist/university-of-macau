@@ -1,0 +1,50 @@
+{
+  "provider": "university-of-macau",
+  "sources": [
+    "_original/university-of-macau-open-data-api-original.yml"
+  ],
+  "outputs": [
+    "university-of-macau-access-control-records-api-openapi.yml",
+    "university-of-macau-car-park-availability-api-openapi.yml",
+    "university-of-macau-computer-room-pc-status-api-openapi.yml",
+    "university-of-macau-computer-room-reservations-api-openapi.yml",
+    "university-of-macau-course-catalog-api-openapi.yml",
+    "university-of-macau-courses-api-openapi.yml",
+    "university-of-macau-events-api-openapi.yml",
+    "university-of-macau-news-api-openapi.yml",
+    "university-of-macau-organizational-units-api-openapi.yml",
+    "university-of-macau-public-holidays-api-openapi.yml",
+    "university-of-macau-rc-hostel-bed-spaces-api-openapi.yml",
+    "university-of-macau-shuttle-bus-arrival-time-api-openapi.yml",
+    "university-of-macau-sports-facilities-api-openapi.yml",
+    "university-of-macau-sports-facilities-booking-api-openapi.yml",
+    "university-of-macau-student-job-vacancies-api-openapi.yml",
+    "university-of-macau-wifi-access-log-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "university-of-macau-open-data-api-original.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "university-of-macau-access-control-records-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-car-park-availability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-computer-room-pc-status-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-computer-room-reservations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-course-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-courses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-news-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-organizational-units-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-public-holidays-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-rc-hostel-bed-spaces-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-shuttle-bus-arrival-time-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-sports-facilities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-sports-facilities-booking-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-student-job-vacancies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "university-of-macau-wifi-access-log-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

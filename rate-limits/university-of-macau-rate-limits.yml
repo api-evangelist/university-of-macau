@@ -4,32 +4,60 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: University of Macau
 providerId: university-of-macau
 created: '2026-06-03'
-modified: '2026-06-03'
-reconciled: false
+modified: '2026-09-01'
+generated: '2026-09-01'
+method: probed
+x-operator: institution
+reconciled: true
 tags:
 - Education
 - Higher Education
 - University
+- Open Data
 - Rate Limiting
 description: >-
-  University of Macau does not publish a unified public rate-limit table across its APIs. Open
-  metadata and harvesting endpoints (OAI-PMH, IIIF, library) may throttle large-scale
-  or automated harvesting; clients should harvest politely, honor Retry-After, and
-  contact the relevant service for bulk access.
-notes: Confirm per-service limits with each API's documentation; harvest responsibly.
+  The University of Macau Data and Open Data API Platform enforces limits at the Azure API
+  Management gateway in front of api.data.um.edu.mo, and documents the two failure modes on its own
+  Response Codes page: 403 "Quota Exceeded — out of call volume quota for your subscription within
+  a given time period" and 429 "Too Many Requests — rate limit is exceeded". What it does not
+  publish is the numbers. The product policy that carries the actual call-volume quota and
+  rate-limit window is not readable without a UMPASS sign-in, so a developer cannot size an
+  integration before subscribing. The 403 message does carry a countdown —
+  "Quota will be replenished in 00:49:11" — which means the replenishment interval is discoverable
+  only by exhausting it.
+notes: >-
+  Corrected 2026-09-01. The previous version of this file described throttling on "OAI-PMH, IIIF,
+  library" endpoints; none of those exist on any um.edu.mo host and the claim was not evidenced.
 sources:
-- https://raw.githubusercontent.com/api-evangelist/university-of-macau/refs/heads/main/apis.yml
+- https://data.um.edu.mo/api-documents/response-codes
+- https://api.data.um.edu.mo/service/media/events/all
 responseCodes:
+  quota_exceeded: 403
   throttled: 429
 limits:
-- name: Default
-  scope: client
-  metric: requests-per-minute
-  limit: see service documentation
-  notes: No published global limit; large harvests may be rate-limited.
+- name: Call volume quota
+  scope: subscription
+  metric: calls
+  limit: not published
+  timeFrame: not published
+  notes: >-
+    Enforced per Azure API Management subscription. Exhaustion returns 403 with the replenishment
+    countdown embedded in the message string. No Retry-After header is documented.
+- name: Rate limit
+  scope: subscription
+  metric: requests-per-window
+  limit: not published
+  notes: Exceeding it returns 429. Window length is not published.
 policies:
-- name: Backoff Strategy
-  description: Exponential backoff with jitter; honor Retry-After; harvest during off-peak hours.
+- name: Backoff strategy
+  description: >-
+    Treat 403 and 429 as retryable and back off. Parse the replenishment time out of the 403
+    message body, because no Retry-After header is sent. Prefer paged reads with an explicit
+    pagesize over unbounded /all sweeps — pagesize is capped at 100 and defaults to 100.
+- name: Pagination as a rate control
+  description: >-
+    Collection responses cap at 100 records. Supply count first to learn _size and _total_pages,
+    then page deliberately rather than polling.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

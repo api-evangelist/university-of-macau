@@ -1,0 +1,189 @@
+generated: '2026-09-01'
+method: searched
+source: https://data.um.edu.mo/api-documents/pagination
+docs: https://data.um.edu.mo/api-documents/api-operations
+x-operator: institution
+sources:
+- https://data.um.edu.mo/api-documents/pagination
+- https://data.um.edu.mo/api-documents/filtering
+- https://data.um.edu.mo/api-documents/sorting
+- https://data.um.edu.mo/api-documents/response-codes
+- https://data.um.edu.mo/documentation/api-call-examples
+note: >-
+  Every request and response below is copied verbatim from the University of Macau's own worked
+  examples on the platform documentation. Responses marked truncated are truncated in the source.
+  Nothing here was produced by calling the API: the API cannot be called without a UMPASS-issued
+  subscription key, and API Evangelist holds none.
+examples:
+- name: Count the result set before paging
+  operation: courses_get_all
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/academic/courses/all?year=2024&count
+  response:
+    status: 200
+    truncated: true
+    body:
+      _embedded:
+      - _id: 5ac40856e7940a931a02d06a
+        courseCode: PORT898
+        sem: 2
+        year: 2024
+        courseTitleEng: DOCTORAL THESIS
+        sections:
+        - sectionCode: '001'
+          instructors:
+          - salutation: Dr.
+            name: ANA PAULA BATISTA MARQUES CLETO DE OLIVEIRA GODINHO
+          - salutation: Prof.
+            name: MARIA JOSÉ DOS REIS GROSSO
+      _size: 2092
+      _total_pages: 21
+      _returned: 100
+- name: Retrieve a specific page
+  operation: courses_get_all
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/academic/courses/all?year=2024&page=2
+  response:
+    status: 200
+    truncated: true
+    body:
+      _embedded:
+      - _id: 5ac40845e7940a931a01eaa3
+        courseCode: SOCB121
+        sem: 2
+        year: 2024
+        courseTitleEng: SOCIAL RESEARCH METHODS
+        courseTitleChi: 社會研究方法
+        sections:
+        - sectionCode: '001'
+          classForDetails: 'Class for :n - FSS - SOC11 '
+          instructors:
+          - salutation: Prof.
+            name: KUO SHIH-YA
+          schedules:
+          - day: 2
+            componentType: L
+            timeFrom: '14:30:00'
+            timeTo: '15:45:00'
+            room1: E22-3002
+          - day: 5
+            componentType: L
+            timeFrom: '14:30:00'
+            timeTo: '15:45:00'
+            room1: E22-3002
+      _returned: 100
+- name: Set the page size
+  operation: courses_get_all
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/academic/courses/all?year=2024&pagesize=10
+- name: Simple filter — exact match on a field
+  operation: courses_get_all
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/academic/courses/all?course_code=LAWS4016
+  response:
+    status: 200
+    body:
+      _embedded:
+      - _id: 5bba909ec95d94eef58bfa5a
+        courseCode: LAWS4016
+        sem: 1
+        year: 2018
+        courseTitleEng: RESEARCH AND INTERNSHIP
+        courseTitleChi: 研究與實踐
+        sections:
+        - sectionCode: '301'
+          instructors:
+          - salutation: Prof.
+            name: LI ZHE
+          schedules:
+          - day: 5
+            componentType: L
+            timeFrom: '10:00:00'
+            timeTo: '12:45:00'
+            room1: E32-G020
+      _returned: 1
+- name: Range filter — a half-hour window of door access records
+  operation: access_control_records_get_all
+  request:
+    method: GET
+    url: >-
+      https://api.data.um.edu.mo/service/facilities/access_control_records/all?access_date_from=2024-10-25T08:00:00&access_date_to=2024-10-25T08:30:00
+  response:
+    status: 200
+    truncated: true
+    body:
+      _embedded:
+      - _id: 5b80d4806f517c0f57acb06c
+        hashID: 87b82bfabe9a9a689646886acf9f29f4
+        doorID: 'W12 New Turnstile L In '
+        accessDate: '2024-10-25T08:28:29+08:00'
+        grantResult: G
+      - _id: 5b80d4806f517c0f57acb06b
+        hashID: 87b82bfabe9a9a689646886acf9f29f4
+        doorID: W12-0G-C04
+        accessDate: '2024-10-25T08:26:55+08:00'
+        grantResult: G
+      _returned: 11
+- name: Text-search filter on a job-nature field
+  operation: student_job_vacancies_get_all
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/student/student_job_vacancies/all?job_nature_eng=art
+  response:
+    status: 200
+    truncated: true
+    body:
+      _embedded:
+      - _id: 5bbb2ac4daa2787d090fb434
+        postOffered: 影片剪接師
+        typeOfJob: F
+        deadline: '2018-12-31T00:00:00+08:00'
+        companyNameEng: Salon Multimedia Macau Limited
+        companyNameChin: 沙龍(澳門)多媒體有限公司
+        recruitLocalStudent: '1'
+        postStartDate: '2018-07-24T00:00:00+08:00'
+        postEndDate: '2018-09-24T00:00:00+08:00'
+        jobNatureEng: Art / Design / Freelance
+        jobNatureChin: 藝術 / 設計及自由創作
+- name: Sort ascending
+  operation: access_control_records_get_all
+  request:
+    method: GET
+    url: http://api.data.um.edu.mo/service/facilities/access_control_records/all?sort_by=accessDate
+  note: The documentation prints this example over http; the gateway advertises https only.
+- name: Sort descending
+  operation: access_control_records_get_all
+  request:
+    method: GET
+    url: http://api.data.um.edu.mo/service/facilities/access_control_records/all?sort_by=-accessDate
+- name: Unauthenticated call — live probe
+  operation: events_get_all
+  method: probed
+  request:
+    method: GET
+    url: https://api.data.um.edu.mo/service/media/events/all
+  response:
+    status: 401
+    headers:
+      WWW-Authenticate: >-
+        AzureApiManagementKey realm="https://api.data.um.edu.mo/service/media/events",
+        name="Authorization", type="header"
+    body:
+      statusCode: 401
+      message: >-
+        Access denied due to missing subscription key. Make sure to include subscription key when
+        making requests to an API.
+- name: Quota exhausted
+  operation: any
+  response:
+    status: 403
+    body:
+      statusCode: 403
+      message: 'Out of call volume quota. Quota will be replenished in 00:49:11.'
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,115 @@
+generated: '2026-09-01'
+method: probed
+source: openapi/university-of-macau-open-data-api-openapi.yml
+docs: https://data.um.edu.mo/api-documents/api-operations
+regime: education
+x-operator: institution
+note: >-
+  Conformance against the Kin Score `education` regime standards[]. Every entry below is decided
+  from a fetched artifact with a status code, never from a prose claim on a web page, and the
+  operator of each conforming surface is named because a university's standards conformance is
+  frequently its vendor's. Two of the twelve regime standards are met, both on hosts under
+  um.edu.mo: SAML 2.0 by the university's own AD FS identity provider, and LTI 1.3 Advantage by
+  the university's Moodle deployment. The Data and Open Data API itself — the one contract in this
+  repository — conforms to none of them, which is the honest reading: it is a well-documented
+  plain-JSON API with no education-sector interoperability profile applied to it at all.
+standards:
+- id: saml
+  conforms: true
+  operator: institution
+  evidence: >-
+    https://websso.um.edu.mo/FederationMetadata/2007-06/FederationMetadata.xml returns 200 with
+    content-type application/samlmetadata+xml (71,532 bytes), a signed EntityDescriptor with
+    entityID http://websso.um.edu.mo/adfs/services/trust carrying both an IDPSSODescriptor and an
+    SPSSODescriptor, protocolSupportEnumeration urn:oasis:names:tc:SAML:2.0:protocol,
+    SingleSignOnService over HTTP-POST and HTTP-Redirect bindings, four SingleLogoutService
+    endpoints and 128 declared claim types. The IdP is the University of Macau's own AD FS farm on
+    its own domain; Microsoft Entra ID is the downstream federation broker
+    (https://login.microsoftonline.com/um.edu.mo/v2.0/.well-known/openid-configuration, 200, issuer
+    tenant 76eeec46-fe40-4e1b-ab42-1d6d9f91b8a9), and the realm lookup for um.edu.mo returns
+    NameSpaceType "Federated" with FederationBrandName "University of Macau".
+- id: lti
+  conforms: true
+  operator: tenant
+  version: 1.3 Advantage
+  evidence: >-
+    https://ummoodle.um.edu.mo/mod/lti/certs.php returns 200 application/json with a JWKS
+    containing an RSA RS256 signing key (kid c083a06533e353212f18) — the LTI 1.3 platform key set.
+    https://ummoodle.um.edu.mo/mod/lti/token.php returns the OAuth 2.0 client-credentials error
+    {"error":"invalid_request"} for a bare GET, and https://ummoodle.um.edu.mo/mod/lti/auth.php
+    returns 200 — the LTI OIDC initiation endpoint. Marked operator "tenant" because the LTI
+    implementation is Moodle's, not UM's engineering; the deployment, the keys and the tool
+    registrations are UM's.
+- id: shibboleth
+  conforms: false
+  evidence: >-
+    UM federates with AD FS, not Shibboleth. No shibboleth.sso path, no InCommon/eduGAIN metadata
+    aggregate entry was found for um.edu.mo, and Macao operates no national research-and-education
+    identity federation that publishes an MDQ endpoint.
+- id: crossref
+  conforms: true
+  operator: registry
+  evidence: >-
+    https://api.crossref.org/members/53643 returns primary-name "University of Macau", location
+    "Taipa, Macau, China", DOI prefix 10.64219 and 21 registered DOIs. This is a registry
+    membership — a fact about the institution — not a contract UM publishes.
+- id: datacite
+  conforms: false
+  evidence: >-
+    https://api.datacite.org/providers?query=Macau and /clients?query=Macau both return an empty
+    data array. No DataCite repository or member account for the University of Macau was found.
+- id: orcid
+  conforms: false
+  evidence: >-
+    repository.um.edu.mo (UM Scholars Hub) offers ORCID as one of its search-field codes, which is
+    the repository software's feature list rather than evidence of an ORCID member API integration,
+    and the site's own API path returns "Your IP is not allowed to access or harvest this
+    resources!" so the integration cannot be verified. Recorded as not conforming rather than
+    partial, because no ORCID artifact was fetched.
+- id: oai-pmh
+  conforms: false
+  evidence: >-
+    https://repository.um.edu.mo/oai?verb=Identify and /oai/request?verb=Identify both return
+    404 (Tomcat error page); https://library.um.edu.mo/oai?verb=Identify returns the library
+    homepage, a soft-404. No OAI-PMH provider was found on any um.edu.mo host. This is the notable
+    absence for a research university — the institutional repository is not harvestable.
+- id: scim
+  conforms: false
+  evidence: No /scim/v2 surface on any probed um.edu.mo host; no SCIM claim in any published document.
+- id: oneroster
+  conforms: false
+  evidence: >-
+    No IMS OneRoster endpoint. The course catalog and course-offering data are published instead
+    through the institution's own bespoke JSON APIs at api.data.um.edu.mo, which carry none of the
+    OneRoster resource names or bindings.
+- id: ed-fi
+  conforms: false
+  evidence: Ed-Fi is a US K-12 data standard; no Ed-Fi ODS or API surface found, and none expected.
+- id: caliper
+  conforms: false
+  evidence: No IMS Caliper Analytics sensor or event-store endpoint found on ummoodle.um.edu.mo.
+- id: qti
+  conforms: false
+  evidence: No QTI content-packaging or assessment-delivery API surface found.
+adjacent:
+- id: openapi-3.0
+  conforms: false
+  operator: institution
+  evidence: >-
+    The University of Macau publishes no OpenAPI. The Azure API Management developer portal will
+    export one per API (https://data.um.edu.mo/developer/apis/events?export=true&format=openapi
+    returns openapi 3.0.1), but every export comes back with `paths: {}` — the operations are
+    defined in the gateway and are not carried into the exported document. The OpenAPI in this
+    repository was reconstructed by API Evangelist from the portal's operations metadata and is
+    marked method: probed for exactly that reason.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Flat {"statusCode","message"} envelope; no application/problem+json.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: >-
+    /.well-known/api-catalog, /apis.json, /openapi.json, /llms.txt and /.well-known/security.txt
+    all return 404 on data.um.edu.mo, and llms.txt and security.txt 404 on www.um.edu.mo.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,122 @@
+generated: '2026-09-01'
+method: derived
+source: openapi/university-of-macau-open-data-api-openapi.yml
+docs: https://data.um.edu.mo/data-dictionary
+x-operator: institution
+vocabulary:
+  name: University of Macau Open Data Vocabulary
+  description: >-
+    Domain vocabulary for the University of Macau Data and Open Data API Platform, derived from the
+    platform's own data dictionary, its API General Operations documentation and the sixteen APIs
+    registered on its gateway. Terms describe the institution's own campus-operations data model —
+    the surfaces a university actually runs — plus the identity and access concepts that gate them.
+  version: '2026-09-01'
+  terms:
+  - term: ICTO
+    definition: >-
+      Information and Communication Technology Office, the University of Macau unit that operates
+      the Data and Open Data API Platform. Its copyright line appears on every page of
+      data.um.edu.mo, and it is the operator of record for the one contract in this repository.
+    tags: [Organization, Operator]
+  - term: UMPASS
+    definition: >-
+      The University of Macau's single sign-on identity. A UMPASS account is the precondition for
+      obtaining an API subscription key, which is why the platform is publicly documented but not
+      publicly callable. Authentication resolves to UM's own AD FS at websso.um.edu.mo, federated
+      into a Microsoft Entra ID tenant.
+    tags: [Identity, Access]
+  - term: Product
+    definition: >-
+      Azure API Management grouping that bundles APIs for subscription. The platform publishes one,
+      "UM Members"; subscribing to it is what yields the primary and secondary subscription keys.
+      Products are the platform's only authorization granularity — there are no per-dataset scopes.
+    tags: [Access, Platform]
+  - term: Subscription key
+    definition: >-
+      The credential sent as the raw value of the Authorization header (or as the subscription-key
+      query parameter). Two are issued per subscription, primary and secondary, to allow rotation.
+    tags: [Authentication]
+  - term: Data set
+    definition: >-
+      A published collection of UM institutional data. Sixteen are exposed as APIs on the gateway;
+      a further set — including Power Consumption for October 2017 to August 2022 — is offered only
+      as downloadable files, which is how this platform retires a data set from its API surface.
+    tags: [Core Concept]
+  - term: _embedded
+    definition: >-
+      The array wrapper carrying the page of records in every collection response, alongside
+      _returned (records in this response), and — only when the count parameter is supplied — _size
+      (total records) and _total_pages.
+    tags: [Response, Pagination]
+  - term: count
+    definition: >-
+      Present-as-flag query parameter. Supplying it makes the response carry _size and
+      _total_pages, which is how a client discovers how much data it is about to page through.
+    tags: [Pagination]
+  - term: sort_by
+    definition: >-
+      Query parameter naming the field to sort on; a leading minus sign reverses the order. Sorting
+      on a field the data dictionary does not mark "Indexed" aborts at 32 MB of memory, a limit the
+      platform documents rather than hides.
+    tags: [Sorting]
+  - term: Course offering
+    definition: >-
+      A course as taught in one semester of one academic year, addressed as {course}-{year}-{sem}
+      and carrying sections, each with instructors and a weekly schedule of rooms and times.
+      Semester values run 1 to 5, where 4 has been obsolete since 2008 and 5 since 1985.
+    tags: [Academic, Course Catalog]
+  - term: Course catalog
+    definition: >-
+      The separate register of every course in the current academic year, filterable by course
+      code, the pre-2018/2019 legacy code, title, description, offering unit, offering department
+      and programme level.
+    tags: [Academic, Course Catalog]
+  - term: Organizational unit
+    definition: >-
+      A UM unit or sub-unit, published in Chinese, English and Portuguese — the three-language
+      shape is a Macau-specific institutional fact, not a generic i18n feature.
+    tags: [About, Reference Data]
+  - term: Access control record
+    definition: >-
+      One door-access event: a hashed cardholder identifier, a door identity, a UTC+08:00 timestamp
+      and a grant result. The pseudonymisation is structural — the API never publishes a person.
+    tags: [Facilities, Campus Life, Privacy]
+  - term: Car park availability
+    definition: Free parking spaces per car park, broken down by vehicle type and parking type.
+    tags: [Facilities, Campus Life]
+  - term: Computer room PC status
+    definition: Per-PC location and availability across UM computer rooms, with a companion reservations data set.
+    tags: [Facilities, Campus Life]
+  - term: Shuttle bus arrival time
+    definition: Campus shuttle arrival records by station and vehicle plate number.
+    tags: [Facilities, Campus Life, Transit]
+  - term: Sports facilities booking
+    definition: >-
+      Booking records for campus sports facilities, keyed by place code with a booking-status code
+      set (A, U, R, H, O, X, F, P) and hour-of-day integers from 1 to 24.
+    tags: [Facilities, Campus Life]
+  - term: RC hostel bed spaces
+    definition: >-
+      Bed-space inventory in UM's residential colleges, addressed by residential-college code,
+      building, floor and room. Residential colleges are central to UM's undergraduate model, which
+      is why this is a first-class data set rather than an internal housing table.
+    tags: [Student, Campus Life]
+  - term: Student job vacancies
+    definition: >-
+      On- and off-campus job postings for students, bilingual in English and Chinese, filterable by
+      job nature, post date and application deadline.
+    tags: [Student]
+  - term: WiFi access log
+    definition: >-
+      Association records from outdoor wireless access points — access point name, hashed device
+      identifier, OUI and client status. Published as open data with the device identifier hashed.
+    tags: [Facilities, Privacy]
+  - term: UM Scholars Hub
+    definition: >-
+      The University of Macau institutional repository at repository.um.edu.mo (澳門大學學者庫),
+      indexing faculty, publications and subjects. UM hosts it; the software is a third-party
+      institutional-repository product, its API is IP-restricted, and it exposes no OAI-PMH.
+    tags: [Research Repository, Tenant]
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

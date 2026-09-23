@@ -38,7 +38,13 @@
       "@type": "@id"
     },
     "category": "schema:category",
-    "apiPlatform": "um:apiPlatform"
+    "apiPlatform": "um:apiPlatform",
+    "PropertyValue": "schema:PropertyValue",
+    "propertyID": "schema:propertyID",
+    "value": "schema:value",
+    "EntryPoint": "schema:EntryPoint",
+    "potentialAction": "schema:potentialAction",
+    "urlTemplate": "schema:urlTemplate"
   },
   "@type": "Organization",
   "@id": "https://www.um.edu.mo/",
@@ -46,20 +52,73 @@
   "url": "https://www.um.edu.mo/",
   "foundingDate": "1981-01-01",
   "description": "The University of Macau (UM) is the leading public comprehensive research university of the Macao Special Administrative Region, operating a Data and Open Data API Platform via its Information and Communication Technology Office (ICTO).",
-  "sameAs": "https://www.linkedin.com/school/universityofmacau/",
+  "sameAs": [
+    "https://ror.org/01r4q9n85",
+    "https://www.linkedin.com/school/universityofmacau/",
+    "https://en.wikipedia.org/wiki/University_of_Macau"
+  ],
   "apiPlatform": {
     "@type": "DataCatalog",
     "@id": "https://data.um.edu.mo/",
     "name": "UM Data and Open Data API Platform",
     "url": "https://data.um.edu.mo/",
-    "description": "JSON APIs to data published by UM, organized into categories including About UM, Academic, Facilities, Media, and Student. Access requires registration and an API key obtained through UMPASS.",
+    "description": "Sixteen JSON APIs to data published by UM, served from the gateway at https://api.data.um.edu.mo across About UM, Academic, Facilities, Media and Student categories. Access requires a subscription key obtained through UMPASS registration and subscription to the UM Members product; the key is sent in the Authorization header.",
     "dataset": [
-      { "@type": "Dataset", "name": "About UM", "category": "Organizational Units and Public Holidays" },
-      { "@type": "Dataset", "name": "Academic", "category": "Course Catalog and Courses Offered" },
-      { "@type": "Dataset", "name": "Facilities", "category": "Facilities Information" },
-      { "@type": "Dataset", "name": "Media", "category": "News and Events" },
-      { "@type": "Dataset", "name": "Student", "category": "Student Services Information" }
+      {
+        "@type": "Dataset",
+        "name": "About UM",
+        "category": "Organizational Units and Public Holidays"
+      },
+      {
+        "@type": "Dataset",
+        "name": "Academic",
+        "category": "Course Catalog and Courses Offered"
+      },
+      {
+        "@type": "Dataset",
+        "name": "Facilities",
+        "category": "Facilities Information"
+      },
+      {
+        "@type": "Dataset",
+        "name": "Media",
+        "category": "News and Events"
+      },
+      {
+        "@type": "Dataset",
+        "name": "Student",
+        "category": "Student Services Information"
+      }
     ],
-    "license": "https://data.um.edu.mo/terms-and-conditions-of-use"
-  }
+    "license": "https://data.um.edu.mo/terms-and-conditions-of-use",
+    "provider": {
+      "@id": "https://www.um.edu.mo/"
+    },
+    "potentialAction": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://api.data.um.edu.mo/service/{category}/{data_set}/all"
+    }
+  },
+  "identifier": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "ROR",
+      "value": "https://ror.org/01r4q9n85"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "GRID",
+      "value": "grid.437123.0"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "Crossref member",
+      "value": "53643"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "Crossref DOI prefix",
+      "value": "10.64219"
+    }
+  ]
 }

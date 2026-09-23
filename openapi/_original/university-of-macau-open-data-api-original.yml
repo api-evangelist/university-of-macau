@@ -1,0 +1,1515 @@
+# University of Macau — Data and Open Data API Platform
+# generated: '2026-09-01'
+# method: probed
+# source: https://data.um.edu.mo/developer/apis?api-version=2022-04-01-preview
+# note: Reconstructed by API Evangelist from the platform's own anonymously readable Azure API
+#   Management developer-portal metadata (API list, per-API operations, per-operation template and
+#   query parameters) plus the published API General Operations documentation. Not published by UM.
+openapi: 3.0.1
+info:
+  title: University of Macau Data and Open Data API Platform
+  version: '1.0'
+  description: 'The University of Macau (UM) Data and Open Data API Platform, operated by the university''s
+    Information and Communication Technology Office (ICTO), exposes UM''s own institutional data as JSON
+    APIs: organizational units and public holidays, the course catalog and course offerings, campus facilities
+    (car park availability, computer room PC status and reservations, shuttle bus arrival times, sports
+    facilities and bookings, door access control records, outdoor WiFi access logs), university news and
+    events, residential college hostel bed spaces and student job vacancies.
+
+
+    Every API requires a subscription key issued through UMPASS registration and product subscription;
+    the key is sent in the `Authorization` header (or as a `subscription-key` query parameter). Collection
+    operations share a documented pagination, filtering and sorting convention: `page`, `pagesize`, `count`
+    and `sort_by`, with results wrapped in an `_embedded` array alongside `_returned`, `_size` and `_total_pages`.
+
+
+    This description was assembled by API Evangelist from the platform''s own anonymously readable developer-portal
+    metadata at https://data.um.edu.mo/developer/apis and from the published API General Operations documentation.
+    It is an independent third-party reconstruction, not a document published by the University of Macau.'
+  termsOfService: https://data.um.edu.mo/terms-and-conditions-of-use
+  contact:
+    name: Information and Communication Technology Office (ICTO), University of Macau
+    email: icto.ims@um.edu.mo
+    url: https://data.um.edu.mo/contact-us
+  x-operator: institution
+  x-operator-evidence: 'All 16 APIs are served from https://api.data.um.edu.mo, a host under the University
+    of Macau''s own registrable domain um.edu.mo, and every dataset is UM''s own campus data. The delivery
+    platform is Azure API Management (WWW-Authenticate: AzureApiManagementKey), but Microsoft operates
+    no part of the data or the API design — the copyright line on every portal page reads "Information
+    and Communication Technology Office (ICTO), University of Macau".'
+servers:
+- url: https://api.data.um.edu.mo
+  description: Production gateway (Azure API Management, region East Asia)
+tags:
+- name: Access Control Records
+  description: This data set includes online door access records.
+- name: Car Park Availability
+  description: This data set includes the total number of available parking spaces for the car park according
+    to the vehicle type or parking type.
+- name: Computer Room PC Status
+  description: This data set includes the locations and availability status of computer room PCs at the
+    University of Macau. It details the PC name, locations and availability.
+- name: Computer Room Reservations
+  description: This data set includes latest information of computer room locations and reservations records.
+- name: Course Catalog
+  description: This data set includes all course information of current academic year.
+- name: Courses
+  description: This data set includes courses and their corresponding sections. For each section, two
+    JSON Array of objects detail the schedule and instructor arrangements.
+- name: Events
+  description: This data set includes events data of the University of Macau.
+- name: News
+  description: This data set includes news data published by the University of Macau.
+- name: Organizational Units
+  description: 'This data set includes current units and sub-units information of the University of Macau
+    in three languages: Chinese, English and Portuguese.'
+- name: Public Holidays
+  description: This data set includes the date of the public holidays of the University of Macau.
+- name: RC Hostel Bed Spaces
+  description: This data set includes current information of bed spaces in residential college excluded
+    PGH. No historical records, and bed name is pre-generated for the whole year ahead.
+- name: Shuttle Bus Arrival Time
+  description: This data set includes the bus arrival time records and station information.
+- name: Sports Facilities
+  description: This data set includes current sports facilities on the University of Macau campus.
+- name: Sports Facilities Booking
+  description: This data set includes booking information about current sports facilities on the University
+    of Macau campus.
+- name: Student Job Vacancies
+  description: This data set includes information of job vacancy advertisement posted in Job Vacancy E-system
+    for student.
+- name: Wifi Access Log
+  description: This data set includes WiFi access logs from outdoor wireless access points.
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+paths:
+  /service/facilities/access_control_records/all:
+    get:
+      tags:
+      - Access Control Records
+      operationId: access_control_records_get_all
+      summary: GET /all
+      description: Return online door access control records.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: door_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Door identity
+        example: W12
+      - name: access_date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-25T08:00:00'
+      - name: access_date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-25T08:30:00'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/car_park_availability/all:
+    get:
+      tags:
+      - Car Park Availability
+      operationId: car_park_availability_get_all
+      summary: GET /all
+      description: This data set includes the total number of available parking spaces for the car park
+        according to the vehicle type or parking type.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Start datetime for filtering car park availability records.
+
+          Datetime, in UTC+08:00 (inclusive)'
+        example: 2024-10-14T10:00:00:00
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'End datetime for filtering car park availability records.
+
+          Datetime, in UTC+08:00 (inclusive)'
+        example: 2024-10-14T16:00:00:00
+      - name: car_park_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Car Park Code
+        example: P1
+      - name: vehicle_type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Types of vehicle
+        example: Light Vehicle
+      - name: parking_type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Types of parking
+        example: Visitor
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/computer_room_pc_status/all:
+    get:
+      tags:
+      - Computer Room PC Status
+      operationId: computer_room_pc_status_get_all
+      summary: GET /all
+      description: This data set includes the locations and availability status of computer room PCs at
+        the University of Macau. It details the PC name, locations and availability.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: building_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Building code of the building where the computer room locates
+        example: E6
+      - name: room_no
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Room Number of the room where the PC locates
+        example: '3092'
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-03-23T15:00:00'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-03-23T16:00:00'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/computer_room_reservations/all:
+    get:
+      tags:
+      - Computer Room Reservations
+      operationId: computer_room_reservations_get_all
+      summary: GET /all
+      description: This data set includes latest information of computer room locations and reservations
+        records.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: building_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Building code of the building where the computer room locates
+        example: E6
+      - name: room_no
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Room Number of the computer room
+        example: '2092'
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Status of reservation
+        example: '1'
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Reservation start date, in UTC+08:00 (inclusive)
+        example: '2024-07-04T06:00:00'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Reservation end date, in UTC+08:00 (inclusive)
+        example: '2024-07-04T10:00:00'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/academic/course_catalog/all:
+    get:
+      tags:
+      - Course Catalog
+      operationId: course_catalog_get_all
+      summary: GET /all
+      description: This data set includes all course information of current academic year.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: course_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Current course code. It is made up of 2 components, a 4-letter course prefix and
+          a 4-digit course number
+        example: SUMR1000
+      - name: old_course_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Course code used before 2018/2019 academic year. It is made up of 2 components, a
+          4-letter course prefix and a 3-digit course number
+        example: SUMR001
+      - name: course_title
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Course Title
+        example: SUMMER RESEARCH PROGRAMME
+      - name: course_description
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Description of this course
+        example: The Programme serves to provide an opportunity for undergraduate students
+      - name: offering_unit
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Abbreviation of Offering Unit
+        example: UGP
+      - name: offering_dept
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Abbreviation of Offering Department
+        example: CEE
+      - name: offering_prog_level
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Offering programme level, valid values are: UG (undergraduate), PG (postgraduate)'
+        example: UG
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/academic/courses/all:
+    get:
+      tags:
+      - Courses
+      operationId: courses_get_all
+      summary: GET /all
+      description: GET /all
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: course_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ID representing this course
+        example: COIS713
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The academic year in which the course was offered, e.g. year 2017 represents academic
+          year 2017/2018
+        example: '2017'
+      - name: sem
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Semester ID, values range from 1 to 5, which represent:
+
+          1: First semester
+
+          2: Second semester
+
+          3: Summer term
+
+          4: Fourth term, obsolete since 2008
+
+          5: Fifth term, obsolete since 1985'
+        example: '1'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/academic/courses/{course}-{year}-{sem}:
+    get:
+      tags:
+      - Courses
+      operationId: courses_get_course_year_sem
+      summary: GET /course-year-sem
+      description: GET /{course}-{year}-{sem}
+      parameters:
+      - name: course
+        in: path
+        required: true
+        description: ID representing this course
+        schema:
+          type: string
+        example: EDPC602
+      - name: year
+        in: path
+        required: true
+        description: The academic year in which the course was offered, e.g. year 2017 represents academic
+          year 2017/2018
+        schema:
+          type: string
+        example: '2017'
+      - name: sem
+        in: path
+        required: true
+        description: 'Semester ID, values range from 1 to 5, which represent:
+
+          1: First semester
+
+          2: Second semester
+
+          3: Summer term
+
+          4: Fourth term, obsolete since 2008
+
+          5: Fifth term, obsolete since 1985'
+        schema:
+          type: string
+        example: '1'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/academic/courses/{courseCode}-{year}-{sem}/{sectionCode}:
+    get:
+      tags:
+      - Courses
+      operationId: courses_get_coursecode_year_sem_sectioncode
+      summary: GET/courseCode-year-sem/sectionCode
+      description: GET/{courseCode}-{year}-{sem}/{sectionCode}
+      parameters:
+      - name: courseCode
+        in: path
+        required: true
+        description: ID representing this course
+        schema:
+          type: string
+        example: EDPC602
+      - name: year
+        in: path
+        required: true
+        description: The academic year in which the course was offered, e.g. year 2017 represents academic
+          year 2017/2018
+        schema:
+          type: string
+        example: '2017'
+      - name: sem
+        in: path
+        required: true
+        description: 'Semester ID, values range from 1 to 5, which represent:
+
+          1: First semester
+
+          2: Second semester
+
+          3: Summer term
+
+          4: Fourth term, obsolete since 2008
+
+          5: Fifth term, obsolete since 1985'
+        schema:
+          type: string
+        example: '1'
+      - name: sectionCode
+        in: path
+        required: true
+        description: The section ID
+        schema:
+          type: string
+        example: '001'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/media/events/all:
+    get:
+      tags:
+      - Events
+      operationId: events_get_all
+      summary: GET /all
+      description: This data set includes events data of the University of Macau.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The start date of the event, in UTC+8:00 (inclusive)
+        example: '2024-01-01'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The end date of the event, in UTC+8:00 (exclusive)
+        example: '2024-01-31'
+      - name: item_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The ID of the event
+        example: '47016'
+      - name: smart_point
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Indicator for events which can gain Smart Point through participation. Please noted
+          that not all events included this indicator
+
+          This parameter only match value for ‘true’ or ‘false’'
+        example: 'true'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/media/news/all:
+    get:
+      tags:
+      - News
+      operationId: news_get_all
+      summary: GET /all
+      description: This data set includes news data published by the University of Macau.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Publish date of the news, in UTC+08:00 (inclusive)
+        example: '2024-03-01T00:00:00'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Publish date of the news, in UTC+08:00 (inclusive)
+        example: '2024-03-31T23:59:59'
+      - name: keyword
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Full text search for news title and content, case insensitive (for English content
+          only)
+        example: Conference
+      - name: item_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The ID of the news
+        example: '1234'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/aboutum/organizational_units/all:
+    get:
+      tags:
+      - Organizational Units
+      operationId: organizational_units_get_all
+      summary: GET /all
+      description: 'This data set includes current units and sub-units information of the University of
+        Macau in three languages: Chinese, English and Portuguese.'
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/aboutum/organizational_units/{unitCode}:
+    get:
+      tags:
+      - Organizational Units
+      operationId: organizational_units_unitcode
+      summary: GET /unitCode
+      description: GET /{unitCode}
+      parameters:
+      - name: unitCode
+        in: path
+        required: true
+        description: Unit Code
+        schema:
+          type: string
+        example: LIB
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/aboutum/public_holidays/all:
+    get:
+      tags:
+      - Public Holidays
+      operationId: public_holidays_get_all
+      summary: GET /all
+      description: This data set includes the date of the public holidays of the University of Macau.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Date, in UTC+08:00 (inclusive)
+        example: '2024-03-01'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Date, in UTC+08:00 (inclusive)
+        example: '2024-03-31'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/student/rc_hostel_bed_spaces/all:
+    get:
+      tags:
+      - RC Hostel Bed Spaces
+      operationId: rc_hostel_bed_spaces_get_all
+      summary: GET /all
+      description: This data set includes current information of bed spaces in residential college excluded
+        PGH. No historical records, and bed name is pre-generated for the whole year ahead.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: building_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Building code
+        example: S9
+      - name: floor
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Floor
+        example: '04'
+      - name: room
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Room
+        example: 009
+      - name: rc_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Residential code
+        example: SPC
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/shuttle_bus_arrival_time/all:
+    get:
+      tags:
+      - Shuttle Bus Arrival Time
+      operationId: shuttle_bus_arrival_time_get_all
+      summary: GET /all
+      description: This data set includes the bus arrival time records and station information.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-10-14T10:00:00'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-10-14T11:00:00'
+      - name: vehicle_plate_no
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Vehicle plate number
+        example: MU-78-53
+      - name: station
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The name of the station
+        example: 行政樓
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/sport_complex_facilities/all:
+    get:
+      tags:
+      - Sports Facilities
+      operationId: sport_complex_facilities_get_all
+      summary: GET /all
+      description: This data set includes current sports facilities on the University of Macau campus.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: place_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Identity code for sports facilities
+        example: HSPL0
+      - name: description
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Description in English
+        example: Swimming Pool Lane 0
+      - name: description_chin
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Description in Chinese
+        example: 游泳館第零泳道
+      - name: booking_status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Booking status
+        example: Y
+      - name: place_category
+        in: query
+        required: false
+        schema:
+          type: string
+        description: INDOOR/OUTDOOR
+        example: INDOOR
+      - name: open_time_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: From 1 to 24, represents the 24 hours in a day
+        example: '7'
+      - name: open_time_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: From 1 to 24, represents the 24 hours in a day
+        example: '22'
+      - name: web_booking_enabled
+        in: query
+        required: false
+        schema:
+          type: string
+        description: '“Y” = web booking enabled
+
+          “N” = web booking disabled'
+        example: N
+      - name: admin_booking_enabled
+        in: query
+        required: false
+        schema:
+          type: string
+        description: '“Y” = counter booking enabled
+
+          “N” = counter booking disabled'
+        example: Y
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/sport_complex_facilities_booking/all:
+    get:
+      tags:
+      - Sports Facilities Booking
+      operationId: sport_complex_facilities_booking_get_all
+      summary: GET /all
+      description: This data set includes booking information about current sports facilities on the University
+        of Macau campus.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: place_code
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Identity code represents the sports facilities
+        example: PAV
+      - name: booking_status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Booking status:  A, U, R, H, O, X, F, P, or N.
+
+          Available (A) - The time slot is available for booking.
+
+          Free Use (U) - If the time slot is not booked, eligible users can use the court for free, if
+          the available time slot has been marked for usages, the status of the time slot will become
+          free use.
+
+          Reserved (R) - The time slot has been reserved for somebody.
+
+          Hold (H) - The time slot has been held.
+
+          Occupied (O) - The time slot has been booked.
+
+          Closed (X) - The time slot is not open for booking.
+
+          Not Available Due to Dependency (F or P) - The time slot is not available for booking because
+          of courts dependency.
+
+          Not Available Due to Priority (N) - The time slot is not available for booking because of courts
+          priority.'
+        example: A
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-25'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-31'
+      - name: time_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Booking start time, 1 – 24 represents 24 hours in a day
+        example: '9'
+      - name: time_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Booking end time, 1 – 24 represents 24 hours in a day
+        example: '10'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/student/student_job_vacancies/all:
+    get:
+      tags:
+      - Student Job Vacancies
+      operationId: student_job_vacancies_get_all
+      summary: GET /all
+      description: This data set includes information of job vacancy advertisement posted in Job Vacancy
+        E-system for student.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: job_nature_eng
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Job nature in English
+        example: art
+      - name: job_nature_chin
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Job nature in Chinese
+        example: 藝術
+      - name: deadline_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Starting date of deadline, in UTC+08:00 (inclusive)
+        example: '2024-10-01'
+      - name: deadline_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: End date of deadline, in UTC+08:00 (inclusive)
+        example: '2024-10-31'
+      - name: post_date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Starting date of post date, in UTC+08:00 (inclusive)
+        example: '2024-10-01'
+      - name: post_date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: End date of post date, in UTC+08:00 (inclusive)
+        example: '2024-10-31'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /service/facilities/wifi_access_log/all:
+    get:
+      tags:
+      - Wifi Access Log
+      operationId: wifi_access_log_get_all
+      summary: GET /all
+      description: This data set includes WiFi access logs from outdoor wireless access points.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive).
+        example: '2024-05-05T12:29:00'
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive).
+        example: '2024-05-05T12:29:00'
+      - name: ap_name
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Identity for the WiFi access point.
+        example: SAC-E31-1
+      - name: client_status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Status of access:
+
+          Auth success = the device is connected to WiFi.
+
+          Deauth from sta = the device is disconnected from WiFi'
+        example: Auth success
+      - name: id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Hashed ID representing the device connected to WiFi, same device got same hashID
+          within the same day.
+        example: da37029726ad20df17d4e3a9fbf04e1e
+      - name: oui
+        in: query
+        required: false
+        schema:
+          type: string
+        description: An OUI (Organizationally Unique Identifier) which identifies a vendor or manufacturer
+          of the device connected to WiFi .
+        example: Apple, Inc.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Subscription key from the UM Members product subscription, sent as the raw value of
+        the Authorization header.
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+      description: Same subscription key, supplied as a query parameter.
+  parameters:
+    page:
+      name: page
+      in: query
+      required: false
+      description: The page to be retrieved, starting from 1. Page 1 is returned if not specified.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      example: 1
+    pagesize:
+      name: pagesize
+      in: query
+      required: false
+      description: The maximum number of objects returned per page. Value ranges from 1 to 100; default
+        is 100.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+      example: 10
+    count:
+      name: count
+      in: query
+      required: false
+      description: Present-as-flag parameter. When supplied, the response carries _size (total records)
+        and _total_pages (total pages) for the result set.
+      schema:
+        type: string
+      allowEmptyValue: true
+    sort_by:
+      name: sort_by
+      in: query
+      required: false
+      description: Sort the result by a specific field. Ascending by default; prefix the field name with
+        "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary
+        "Indexed" column.
+      schema:
+        type: string
+      example: -accessDate
+  schemas:
+    PagedCollection:
+      type: object
+      description: Standard collection envelope returned by every /all operation.
+      properties:
+        _embedded:
+          type: array
+          description: The page of records. Record shape varies per data set; see the platform data dictionary.
+          items:
+            type: object
+            additionalProperties: true
+        _returned:
+          type: integer
+          description: Number of records in this response.
+        _size:
+          type: integer
+          description: Total number of records in the result set. Present only when the count parameter
+            is supplied.
+        _total_pages:
+          type: integer
+          description: Total number of pages, equal to ceil(_size / pagesize). Present only when the count
+            parameter is supplied.
+      required:
+      - _embedded
+      - _returned
+    Error:
+      type: object
+      description: Error envelope returned by the gateway for every non-2xx response.
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+      example:
+        statusCode: 401
+        message: Access denied due to invalid subscription key. Make sure to provide a valid key for an
+          active subscription.
+  responses:
+    BadRequest:
+      description: The request was invalid or cannot be otherwise served.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccessDenied:
+      description: Missing or incorrect authentication credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    QuotaExceeded:
+      description: Out of call volume quota for the subscription within the given time period.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: The API service may be undergoing maintenance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

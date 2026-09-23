@@ -1,0 +1,46 @@
+generated: '2026-09-01'
+method: derived
+source: openapi/university-of-macau-open-data-api-openapi.yml
+docs: https://data.um.edu.mo/
+x-operator: institution
+versioning:
+  scheme: none-in-path
+  current: '1.0'
+  base: https://api.data.um.edu.mo
+  detail: >-
+    There is no version segment in any of the 19 operation paths — every URL is
+    /service/<category>/<data_set>/... with no /v1. Each API carries version "1.0" in the
+    developer-portal metadata, and the gateway exposes no API version sets, so a breaking change to
+    a data set would be a breaking change in place. The only versioned thing on the platform is the
+    developer-portal backend itself (api-version=2022-04-01-preview), which is Microsoft's, not UM's.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  detail: >-
+    No deprecation policy, no Sunset or Deprecation headers, no changelog page. One data set is
+    already effectively frozen and says so only in its description: Power Consumption covers
+    October 2017 to August 2022 and is listed as historical, and it does not appear among the 16
+    live gateway APIs at all — it is offered as a file download instead. That is a retirement
+    handled by quietly moving a data set from API to file, with no machine-readable signal.
+status_page:
+  published: false
+  detail: >-
+    No status page. The Azure API Management health probe at
+    https://api.data.um.edu.mo/internal-status-0123456789abcdef does answer publicly with
+    {"StatusCode":200,"Message":"Service operational", ... "Region":"East Asia","SkuType":"Developer"},
+    which is a platform artifact rather than a UM commitment — and the Developer SKU it reports
+    carries no Azure SLA, which is worth knowing before building anything on top of this API.
+support:
+  channel: Information and Communication Technology Office (ICTO), Information Management Section
+  email: icto.ims@um.edu.mo
+  phone: '+853 8822 8500'
+  url: https://data.um.edu.mo/contact-us
+  hours: Mon–Thu 09:00–13:00 and 14:00–17:45; Fri 09:00–13:00 and 14:00–17:30 (Macau time)
+change_communication:
+  changelog: false
+  rss: false
+  detail: No changelog, feed, or mailing list for API changes was found on the platform.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

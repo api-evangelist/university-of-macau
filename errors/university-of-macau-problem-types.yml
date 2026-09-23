@@ -1,0 +1,79 @@
+generated: '2026-09-01'
+method: searched
+source: https://data.um.edu.mo/api-documents/response-codes
+docs: https://data.um.edu.mo/api-documents/response-codes
+x-operator: institution
+format: azure-apim-error-envelope
+rfc9457: false
+note: >-
+  The platform does NOT use RFC 9457 application/problem+json. Every non-2xx response is the flat
+  Azure API Management envelope — an integer `statusCode` and a human `message` — and the platform
+  documents it explicitly on its own Response Codes page, including a remediation ("Solution")
+  column for each status. That column is the interesting part: it is unusually complete for a
+  university surface, and it is the reason error semantics are recorded here as documented rather
+  than inferred. What is missing is a machine-readable error code: the docs promise "JSON-based
+  error codes and messages" but every observed body carries only statusCode and message, so a
+  client has to string-match the message to distinguish quota exhaustion from rate limiting.
+envelope:
+  content_type: application/json
+  schema: Error
+  example:
+    statusCode: 401
+    message: >-
+      Access denied due to invalid subscription key. Make sure to provide a valid key for an active
+      subscription.
+status_codes:
+- status: 200
+  meaning: OK — the request was successful.
+  retryable: false
+  documented_solution: No action needed. The API is working as expected.
+- status: 400
+  meaning: Bad Request — the request was invalid or cannot be otherwise served.
+  retryable: false
+  documented_solution: >-
+    Check the request syntax and ensure all required parameters are included and correctly formatted.
+- status: 401
+  meaning: Access Denied — missing or incorrect authentication credentials.
+  retryable: false
+  documented_solution: >-
+    Ensure that your authentication credentials (such as API keys) are correct and up to date.
+    Verify that you have the necessary permissions to access the resource.
+  observed: >-
+    Live, unauthenticated: {"statusCode":401,"message":"Access denied due to missing subscription
+    key. Make sure to include subscription key when making requests to an API."} with
+    WWW-Authenticate: AzureApiManagementKey.
+- status: 403
+  meaning: Quota Exceeded — out of call volume quota for the subscription within a time period.
+  retryable: true
+  documented_solution: Wait for the quota to reset.
+  example:
+    statusCode: 403
+    message: 'Out of call volume quota. Quota will be replenished in 00:49:11.'
+  note: >-
+    The replenishment interval is carried in the message string, not in a Retry-After header.
+- status: 404
+  meaning: Resource Not Found.
+  retryable: false
+  documented_solution: >-
+    Verify the URL and endpoint you are trying to access. Ensure that the resource exists and that
+    you are using the correct path.
+  observed: >-
+    Live: {"statusCode":404,"message":"Resource not found"} for any path not registered on the
+    gateway. This 404-vs-401 split is what makes the registered API paths enumerable without a key.
+- status: 429
+  meaning: Too Many Requests — rate limit exceeded.
+  retryable: true
+  documented_solution: Wait for the rate limit to reset.
+- status: 500
+  meaning: Internal Server Error — the API service may be undergoing maintenance.
+  retryable: true
+  documented_solution: >-
+    Wait for some time and try again later. If the issue persists, contact the service
+    administrator for further assistance.
+gaps:
+- No machine-readable error code field; clients must parse the message string.
+- No Retry-After header documented for 403 or 429; the wait is stated in prose inside the message.
+- No RFC 9457 problem+json content type.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -4,33 +4,46 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: University of Macau
 providerId: university-of-macau
 created: '2026-06-03'
-modified: '2026-06-03'
-reconciled: false
+modified: '2026-09-01'
+generated: '2026-09-01'
+method: probed
+x-operator: institution
+reconciled: true
 tags:
 - Education
 - Higher Education
 - University
+- Open Data
 - Plans
 description: >-
-  University of Macau is a non-commercial higher-education institution; its APIs are not sold
-  as a commercial product. Public APIs (library, repository, course, and open-metadata
-  interfaces) are offered free of charge, typically for non-commercial use. Most
-  administrative and identity APIs are not openly self-service and require institutional
-  affiliation, credentials, or federation membership rather than a paid plan.
+  There is no money in this API, and there is no open door either. The University of Macau Data and
+  Open Data API Platform states plainly that "all data is free to use", subject to its Terms and
+  Conditions — but access is gated on institutional identity, not payment. A caller must hold a
+  UMPASS account, register the "OPEN DATA API PLATFORM" service on the ICTO Account Information
+  page, sign in to data.um.edu.mo, and subscribe to the single published product, "UM Members", to
+  be issued a primary and secondary subscription key. UMPASS is issued to University of Macau staff
+  and students. So the honest reading of this platform's commercial model is: free of charge,
+  closed to the public, and open data in the licensing sense rather than the access sense.
 notes: >-
-  No published per-seat or per-call commercial pricing. "Free / Open" reflects open
-  public endpoints; "Affiliation / Credentialed" reflects access gated by institutional
-  identity rather than payment.
+  Corrected 2026-09-01. The previous version described "library, repository, course, and
+  open-metadata interfaces" and a "federation membership" tier; neither was evidenced. One product
+  is published on the gateway and it is named UM Members.
 sources:
-- https://raw.githubusercontent.com/api-evangelist/university-of-macau/refs/heads/main/apis.yml
+- https://data.um.edu.mo/quickstart
+- https://data.um.edu.mo/terms-and-conditions-of-use
+- https://data.um.edu.mo/developer/apis?api-version=2022-04-01-preview
 plans:
-- id: university-of-macau-free-open
-  name: Free / Open
+- id: university-of-macau-um-members
+  name: UM Members
   type: free
-  description: Public open APIs (metadata, library, repository, course data) offered at no charge, generally for non-commercial use.
+  description: >-
+    The one published Azure API Management product on the platform. Subscribing grants a
+    subscription key valid across all sixteen data-set APIs; there is no per-dataset or per-scope
+    granularity. Requires a UMPASS account and up to one hour for a new registration to take
+    effect.
   entries:
-  - label: Open API Access
-    name: open_api_access
+  - label: Data and Open Data API access
+    name: open_data_api_access
     type: free
     metric: requests
     limit: -1
@@ -39,21 +52,15 @@ plans:
     unit: 1
     price: '0.00'
     userMultiplied: false
-- id: university-of-macau-affiliation
-  name: Affiliation / Credentialed
-  type: free
-  description: Administrative and identity APIs gated behind institutional SSO, client certificates, or federation membership rather than payment.
-  entries:
-  - label: Credentialed Access
-    name: credentialed_access
-    type: free
-    metric: requests
-    limit: -1
-    timeFrame: usage
-    geo: global
-    unit: 1
-    price: '0.00'
-    userMultiplied: false
+    notes: >-
+      Price is zero; the effective limit is the unpublished product quota enforced at the gateway
+      (403 Quota Exceeded / 429 Too Many Requests). See rate-limits/.
+eligibility:
+  public_signup: false
+  gate: UMPASS institutional single sign-on
+  detail: >-
+    No anonymous or external developer registration path was found. The platform describes itself
+    as giving "UM staff and students access to data published by UM".
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

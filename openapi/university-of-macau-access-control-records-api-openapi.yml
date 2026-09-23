@@ -1,0 +1,203 @@
+openapi: 3.2.0
+info:
+  title: University of Macau Data and Open Data API Platform Access…
+  version: '1.0'
+  description: 'The University of Macau (UM) Data and Open Data API Platform, operated by the university''s Information and Communication Technology Office (ICTO), exposes UM''s own institutional data as JSON APIs: organizational units and public holidays, the course catalog and course offerings, campus facilities (car park availability, computer room PC status and reservations, shuttle bus arrival times, sports facilities and bookings, door access control records, outdoor WiFi access logs), university news and…'
+  termsOfService: https://data.um.edu.mo/terms-and-conditions-of-use
+  contact:
+    name: Information and Communication Technology Office (ICTO), University of Macau
+    email: icto.ims@um.edu.mo
+    url: https://data.um.edu.mo/contact-us
+  x-operator: institution
+  x-operator-evidence: 'All 16 APIs are served from https://api.data.um.edu.mo, a host under the University of Macau''s own registrable domain um.edu.mo, and every dataset is UM''s own campus data. The delivery platform is Azure API Management (WWW-Authenticate: AzureApiManagementKey), but Microsoft operates no part of the data or the API design — the copyright line on every portal page reads "Information and Communication Technology Office (ICTO), University of Macau".'
+servers:
+- url: https://api.data.um.edu.mo
+  description: Production gateway (Azure API Management, region East Asia)
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+tags:
+- name: Access Control Records
+  description: This data set includes online door access records.
+paths:
+  /service/facilities/access_control_records/all:
+    get:
+      tags:
+      - Access Control Records
+      operationId: access_control_records_get_all
+      summary: GET /all
+      description: Return online door access control records.
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: door_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Door identity
+        example: W12
+      - name: access_date_from
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-25T08:00:00'
+      - name: access_date_to
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Datetime, in UTC+08:00 (inclusive)
+        example: '2024-08-25T08:30:00'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/pagesize'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/sort_by'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '403':
+          $ref: '#/components/responses/QuotaExceeded'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      required: false
+      description: The page to be retrieved, starting from 1. Page 1 is returned if not specified.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      example: 1
+    count:
+      name: count
+      in: query
+      required: false
+      description: Present-as-flag parameter. When supplied, the response carries _size (total records) and _total_pages (total pages) for the result set.
+      schema:
+        type: string
+      allowEmptyValue: true
+    pagesize:
+      name: pagesize
+      in: query
+      required: false
+      description: The maximum number of objects returned per page. Value ranges from 1 to 100; default is 100.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+      example: 10
+    sort_by:
+      name: sort_by
+      in: query
+      required: false
+      description: Sort the result by a specific field. Ascending by default; prefix the field name with "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary "Indexed" column.
+      schema:
+        type: string
+      example: -accessDate
+  responses:
+    BadRequest:
+      description: The request was invalid or cannot be otherwise served.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    QuotaExceeded:
+      description: Out of call volume quota for the subscription within the given time period.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: The API service may be undergoing maintenance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccessDenied:
+      description: Missing or incorrect authentication credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    PagedCollection:
+      type: object
+      description: Standard collection envelope returned by every /all operation.
+      properties:
+        _embedded:
+          type: array
+          description: The page of records. Record shape varies per data set; see the platform data dictionary.
+          items:
+            type: object
+            additionalProperties: true
+        _returned:
+          type: integer
+          description: Number of records in this response.
+        _size:
+          type: integer
+          description: Total number of records in the result set. Present only when the count parameter is supplied.
+        _total_pages:
+          type: integer
+          description: Total number of pages, equal to ceil(_size / pagesize). Present only when the count parameter is supplied.
+      required:
+      - _embedded
+      - _returned
+    Error:
+      type: object
+      description: Error envelope returned by the gateway for every non-2xx response.
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+      example:
+        statusCode: 401
+        message: Access denied due to invalid subscription key. Make sure to provide a valid key for an active subscription.
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Subscription key from the UM Members product subscription, sent as the raw value of the Authorization header.
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+      description: Same subscription key, supplied as a query parameter.

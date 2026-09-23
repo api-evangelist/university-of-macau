@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/university-of-macau/main/json-schema/university-of-macau-open-data-schemas.json",
+  "title": "University of Macau Data and Open Data API — schemas",
+  "description": "Schemas for the University of Macau Data and Open Data API Platform (api.data.um.edu.mo). The collection envelope and the Error object are derived from the platform's own published response examples and Response Codes table; the three record schemas are derived field-by-field from the worked examples on the Pagination, Filtering and Sorting documentation pages. Only fields that appear in a published example or a documented query parameter are described here — no field has been invented, and record shapes vary by data set, so these three are illustrative of the platform's conventions rather than a complete model of all sixteen data sets.",
+  "x-generated": "2026-09-01",
+  "x-method": "derived",
+  "x-source": "https://data.um.edu.mo/api-documents/pagination",
+  "x-operator": "institution",
+  "$defs": {
+    "PagedCollection": {
+      "type": "object",
+      "title": "Paged collection envelope",
+      "description": "Returned by every /all operation on the platform.",
+      "properties": {
+        "_embedded": {
+          "type": "array",
+          "description": "The page of records.",
+          "items": { "type": "object" }
+        },
+        "_returned": { "type": "integer", "description": "Number of records in this response." },
+        "_size": { "type": "integer", "description": "Total records in the result set. Present only when the count parameter is supplied." },
+        "_total_pages": { "type": "integer", "description": "ceil(_size / pagesize). Present only when the count parameter is supplied." }
+      },
+      "required": ["_embedded", "_returned"]
+    },
+    "Error": {
+      "type": "object",
+      "title": "Error",
+      "description": "Flat Azure API Management error envelope used for every non-2xx response.",
+      "properties": {
+        "statusCode": { "type": "integer", "enum": [400, 401, 403, 404, 429, 500] },
+        "message": { "type": "string" }
+      },
+      "required": ["statusCode", "message"]
+    },
+    "CourseOffering": {
+      "type": "object",
+      "title": "Course offering",
+      "description": "A record from service/academic/courses — one course as offered in one semester of one academic year, with its sections.",
+      "properties": {
+        "_id": { "type": "string", "description": "Platform record identifier (24-character hex)." },
+        "courseCode": { "type": "string", "description": "Current course code, e.g. SOCB121." },
+        "year": { "type": "integer", "description": "Academic year of the offering; 2024 means academic year 2024/2025." },
+        "sem": { "type": "integer", "minimum": 1, "maximum": 5, "description": "Semester: 1 first, 2 second, 3 summer term, 4 fourth term (obsolete since 2008), 5 fifth term (obsolete since 1985)." },
+        "courseTitleEng": { "type": "string" },
+        "courseTitleChi": { "type": "string" },
+        "sections": { "type": "array", "items": { "$ref": "#/$defs/CourseSection" } }
+      },
+      "required": ["_id", "courseCode", "year", "sem"]
+    },
+    "CourseSection": {
+      "type": "object",
+      "title": "Course section",
+      "properties": {
+        "sectionCode": { "type": "string", "description": "Section identifier, e.g. 001." },
+        "classForDetails": { "type": "string" },
+        "instructors": { "type": "array", "items": { "$ref": "#/$defs/Instructor" } },
+        "schedules": { "type": "array", "items": { "$ref": "#/$defs/ScheduleEntry" } }
+      },
+      "required": ["sectionCode"]
+    },
+    "Instructor": {
+      "type": "object",
+      "properties": {
+        "salutation": { "type": "string", "description": "e.g. Dr., Prof." },
+        "name": { "type": "string" }
+      }
+    },
+    "ScheduleEntry": {
+      "type": "object",
+      "properties": {
+        "day": { "type": "integer", "description": "Day of week as an integer as published in the schedule array." },
+        "componentType": { "type": "string", "description": "Teaching component, e.g. L for lecture." },
+        "timeFrom": { "type": "string", "description": "Start time, HH:MM:SS." },
+        "timeTo": { "type": "string", "description": "End time, HH:MM:SS." },
+        "room1": { "type": "string", "description": "Room identifier, e.g. E22-3002." }
+      }
+    },
+    "AccessControlRecord": {
+      "type": "object",
+      "title": "Access control record",
+      "description": "A record from service/facilities/access_control_records — one door access event. The cardholder is pseudonymised: hashID is a hash, not an identity.",
+      "properties": {
+        "_id": { "type": "string" },
+        "hashID": { "type": "string", "description": "Hashed identifier standing in for the person who presented credentials." },
+        "doorID": { "type": "string", "description": "Door identity, e.g. W12 New Turnstile L In." },
+        "accessDate": { "type": "string", "format": "date-time", "description": "Access timestamp in UTC+08:00." },
+        "grantResult": { "type": "string", "description": "Outcome of the access attempt, e.g. G for granted." }
+      },
+      "required": ["_id", "doorID", "accessDate"]
+    },
+    "StudentJobVacancy": {
+      "type": "object",
+      "title": "Student job vacancy",
+      "description": "A record from service/student/student_job_vacancies.",
+      "properties": {
+        "_id": { "type": "string" },
+        "postOffered": { "type": "string", "description": "Job title as posted." },
+        "typeOfJob": { "type": "string", "description": "Job type code, e.g. F." },
+        "deadline": { "type": "string", "format": "date-time", "description": "Application deadline, UTC+08:00." },
+        "companyNameEng": { "type": "string" },
+        "companyNameChin": { "type": "string" },
+        "recruitLocalStudent": { "type": "string" },
+        "postStartDate": { "type": "string", "format": "date-time" },
+        "postEndDate": { "type": "string", "format": "date-time" },
+        "jobNatureEng": { "type": "string" },
+        "jobNatureChin": { "type": "string" },
+        "jobDescription": { "type": "string" }
+      },
+      "required": ["_id", "postOffered"]
+    }
+  }
+}
