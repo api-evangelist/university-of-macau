@@ -78,60 +78,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    TooManyRequests:
-      description: Rate limit exceeded.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request was invalid or cannot be otherwise served.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    QuotaExceeded:
-      description: Out of call volume quota for the subscription within the given time period.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    AccessDenied:
-      description: Missing or incorrect authentication credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: The API service may be undergoing maintenance.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
-    sort_by:
-      name: sort_by
-      in: query
-      required: false
-      description: Sort the result by a specific field. Ascending by default; prefix the field name with "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary "Indexed" column.
-      schema:
-        type: string
-      example: -accessDate
-    count:
-      name: count
-      in: query
-      required: false
-      description: Present-as-flag parameter. When supplied, the response carries _size (total records) and _total_pages (total pages) for the result set.
-      schema:
-        type: string
-      allowEmptyValue: true
     pagesize:
       name: pagesize
       in: query
@@ -143,6 +90,22 @@ components:
         maximum: 100
         default: 100
       example: 10
+    count:
+      name: count
+      in: query
+      required: false
+      description: Present-as-flag parameter. When supplied, the response carries _size (total records) and _total_pages (total pages) for the result set.
+      schema:
+        type: string
+      allowEmptyValue: true
+    sort_by:
+      name: sort_by
+      in: query
+      required: false
+      description: Sort the result by a specific field. Ascending by default; prefix the field name with "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary "Indexed" column.
+      schema:
+        type: string
+      example: -accessDate
     page:
       name: page
       in: query
@@ -153,21 +116,44 @@ components:
         minimum: 1
         default: 1
       example: 1
+  responses:
+    InternalServerError:
+      description: The API service may be undergoing maintenance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccessDenied:
+      description: Missing or incorrect authentication credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    QuotaExceeded:
+      description: Out of call volume quota for the subscription within the given time period.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The request was invalid or cannot be otherwise served.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: Error envelope returned by the gateway for every non-2xx response.
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
-      example:
-        statusCode: 401
-        message: Access denied due to invalid subscription key. Make sure to provide a valid key for an active subscription.
     PagedCollection:
       type: object
       description: Standard collection envelope returned by every /all operation.
@@ -190,6 +176,20 @@ components:
       required:
       - _embedded
       - _returned
+    Error:
+      type: object
+      description: Error envelope returned by the gateway for every non-2xx response.
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+      example:
+        statusCode: 401
+        message: Access denied due to invalid subscription key. Make sure to provide a valid key for an active subscription.
   securitySchemes:
     apiKeyHeader:
       type: apiKey
