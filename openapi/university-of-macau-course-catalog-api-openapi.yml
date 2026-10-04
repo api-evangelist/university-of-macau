@@ -107,17 +107,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   parameters:
-    pagesize:
-      name: pagesize
-      in: query
-      required: false
-      description: The maximum number of objects returned per page. Value ranges from 1 to 100; default is 100.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 100
-      example: 10
     count:
       name: count
       in: query
@@ -134,6 +123,17 @@ components:
       schema:
         type: string
       example: -accessDate
+    pagesize:
+      name: pagesize
+      in: query
+      required: false
+      description: The maximum number of objects returned per page. Value ranges from 1 to 100; default is 100.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+      example: 10
     page:
       name: page
       in: query
@@ -145,8 +145,8 @@ components:
         default: 1
       example: 1
   responses:
-    InternalServerError:
-      description: The API service may be undergoing maintenance.
+    NotFound:
+      description: Resource not found.
       content:
         application/json:
           schema:
@@ -163,6 +163,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: The API service may be undergoing maintenance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     BadRequest:
       description: The request was invalid or cannot be otherwise served.
       content:
@@ -171,12 +177,6 @@ components:
             $ref: '#/components/schemas/Error'
     TooManyRequests:
       description: Rate limit exceeded.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
       content:
         application/json:
           schema:
