@@ -68,7 +68,7 @@ tags:
   - Research Repository
   - Library
 created: '2026-06-03'
-modified: '2026-09-01'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: university-of-macau:websso-idp
@@ -947,6 +947,10 @@ apis:
   - type: Support
     url: https://data.um.edu.mo/contact-us
 common:
+  - url: https://www.um.edu.mo/news/
+    type: Blog
+  - url: https://www.um.edu.mo/feed/
+    type: BlogRSS
   - type: Website
     url: https://www.um.edu.mo/
   - type: DeveloperPortal
