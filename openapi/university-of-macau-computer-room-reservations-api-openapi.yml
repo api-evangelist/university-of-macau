@@ -101,14 +101,6 @@ components:
       schema:
         type: string
       allowEmptyValue: true
-    sort_by:
-      name: sort_by
-      in: query
-      required: false
-      description: Sort the result by a specific field. Ascending by default; prefix the field name with "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary "Indexed" column.
-      schema:
-        type: string
-      example: -accessDate
     pagesize:
       name: pagesize
       in: query
@@ -130,15 +122,23 @@ components:
         minimum: 1
         default: 1
       example: 1
+    sort_by:
+      name: sort_by
+      in: query
+      required: false
+      description: Sort the result by a specific field. Ascending by default; prefix the field name with "-" for descending. Sorting on a non-indexed field aborts at 32 MB of memory — see the data dictionary "Indexed" column.
+      schema:
+        type: string
+      example: -accessDate
   responses:
-    NotFound:
-      description: Resource not found.
+    TooManyRequests:
+      description: Rate limit exceeded.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    AccessDenied:
-      description: Missing or incorrect authentication credentials.
+    BadRequest:
+      description: The request was invalid or cannot be otherwise served.
       content:
         application/json:
           schema:
@@ -155,14 +155,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request was invalid or cannot be otherwise served.
+    AccessDenied:
+      description: Missing or incorrect authentication credentials.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    TooManyRequests:
-      description: Rate limit exceeded.
+    NotFound:
+      description: Resource not found.
       content:
         application/json:
           schema:
