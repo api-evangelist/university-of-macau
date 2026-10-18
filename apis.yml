@@ -138,6 +138,10 @@ apis:
     with a named education-sector interoperability standard, and it arrives through the LMS.
   humanURL: https://ummoodle.um.edu.mo/
   tags:
+  - LMS
+  - LTI
+  - Education
+  tags_raw:
   - Learning Management
   - LTI
   - Education
